@@ -1,0 +1,55 @@
+.card {
+  background: linear-gradient(135deg, var(--color-parchment), var(--color-parchment-dark));
+  border: 3px solid var(--color-gold);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  transform: translateY(-2px);
+}
+
+.card:active {
+  cursor: pointer;
+  transform: translateY(0);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--color-gold-light);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+}
+
+.card-title {
+  margin: 0;
+  color: var(--color-leather);
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.card-body {
+  padding: 20px;
+  color: var(--color-leather);
+}
+
+.card-body > :first-child {
+  margin-top: 0;
+}
+
+.card-body > :last-child {
+  margin-bottom: 0;
+}

@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --color-parchment: #f4e4c1;
+  --color-parchment-dark: #e8d5a3;
+  --color-leather: #8b6914;
+  --color-blood: #8b0000;
+  --color-blood-light: #c0392b;
+  --color-forest: #1a4a2e;
+  --color-forest-light: #2d7a4e;
+  --color-stone: #2c2c2c;
+  --color-stone-light: #4a4a4a;
+  --color-gold: #d4a017;
+  --color-gold-light: #f0c040;
+  --color-shadow: rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Crimson Text', Georgia, serif;
+  background-color: #1a1a2e;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  color: var(--color-parchment);
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-stone); }
+::-webkit-scrollbar-thumb { background: var(--color-leather); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+
+/* Typography */
+h1, h2, h3 { font-family: 'Cinzel', serif; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 5px currentColor; } 50% { box-shadow: 0 0 20px currentColor; } }
+
+.fade-in { animation: fadeIn 0.3s ease; }
+
+/* États des tokens - halos colorés */
+.condition-blinded { box-shadow: 0 0 12px 3px #888888, 0 0 4px 1px #888888 inset; }
+.condition-charmed { box-shadow: 0 0 12px 3px #ff69b4, 0 0 4px 1px #ff69b4 inset; }
+.condition-deafened { box-shadow: 0 0 12px 3px #808080, 0 0 4px 1px #808080 inset; }
+.condition-frightened { box-shadow: 0 0 12px 3px #9b59b6, 0 0 4px 1px #9b59b6 inset; }
+.condition-grappled { box-shadow: 0 0 12px 3px #e67e22, 0 0 4px 1px #e67e22 inset; }
+.condition-incapacitated { box-shadow: 0 0 12px 3px #f39c12, 0 0 4px 1px #f39c12 inset; }
+.condition-invisible { box-shadow: 0 0 12px 3px rgba(255,255,255,0.3), 0 0 4px 1px rgba(255,255,255,0.1) inset; }
+.condition-paralyzed { box-shadow: 0 0 12px 3px #3498db, 0 0 4px 1px #3498db inset; }
+.condition-petrified { box-shadow: 0 0 12px 3px #95a5a6, 0 0 4px 1px #95a5a6 inset; }
+.condition-poisoned { box-shadow: 0 0 12px 3px #27ae60, 0 0 4px 1px #27ae60 inset; }
+.condition-prone { box-shadow: 0 0 12px 3px #a0522d, 0 0 4px 1px #a0522d inset; }
+.condition-restrained { box-shadow: 0 0 12px 3px #c0392b, 0 0 4px 1px #c0392b inset; }
+.condition-stunned { box-shadow: 0 0 12px 3px #f1c40f, 0 0 4px 1px #f1c40f inset; }
+.condition-unconscious { box-shadow: 0 0 12px 3px #2c3e50, 0 0 4px 1px #2c3e50 inset; }
+.condition-exhaustion { box-shadow: 0 0 12px 3px #d35400, 0 0 4px 1px #d35400 inset; }
+.condition-surprised { box-shadow: 0 0 12px 3px #e74c3c, 0 0 4px 1px #e74c3c inset; }
