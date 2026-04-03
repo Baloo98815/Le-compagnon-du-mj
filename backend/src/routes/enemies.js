@@ -92,6 +92,8 @@ router.delete('/:id', asyncHandler((req, res) => {
     const imgPath = path.join(uploadsDir, path.basename(enemy.token_image));
     if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
   }
+  // Supprimer d'abord les instances dans les scènes (pas de CASCADE sur cette FK)
+  db.prepare('DELETE FROM scene_enemy_instances WHERE enemy_id = ?').run(req.params.id);
   db.prepare('DELETE FROM enemies WHERE id = ?').run(req.params.id);
   logger.info('Ennemi supprimé', { id: req.params.id });
   res.json({ success: true, message: 'Ennemi supprimé' });

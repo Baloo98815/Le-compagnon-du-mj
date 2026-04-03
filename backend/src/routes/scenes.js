@@ -26,8 +26,9 @@ router.get('/:id', asyncHandler((req, res) => {
   const locations = db.prepare('SELECT * FROM scene_locations WHERE scene_id = ?').all(req.params.id);
   const npcs = db.prepare('SELECT * FROM scene_npcs WHERE scene_id = ?').all(req.params.id);
   const enemyInstances = db.prepare(`
-    SELECT sei.*, e.name as enemy_name, e.token_image as enemy_token, e.armor_class as enemy_ac,
-           e.max_hp as enemy_max_hp
+    SELECT sei.*, e.name as enemy_name, e.token_image as enemy_token,
+           e.armor_class as enemy_ac, e.max_hp as enemy_max_hp,
+           e.challenge_rating as enemy_cr
     FROM scene_enemy_instances sei
     JOIN enemies e ON e.id = sei.enemy_id
     WHERE sei.scene_id = ?

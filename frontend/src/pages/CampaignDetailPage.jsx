@@ -283,7 +283,7 @@ export default function CampaignDetailPage() {
       await scenesAPI.create({
         campaign_id: id,
         name: sceneForm.name,
-        type: sceneForm.type,
+        is_combat: sceneForm.type === 'combat',
         description: sceneForm.description,
       });
 
@@ -478,12 +478,12 @@ export default function CampaignDetailPage() {
                     <span
                       style={{
                         ...pageStyles.sceneType,
-                        ...(scene.type === 'combat'
+                        ...(scene.is_combat
                           ? pageStyles.sceneTypeCombat
                           : pageStyles.sceneTypeRoleplay),
                       }}
                     >
-                      {scene.type === 'combat' ? '⚔️ Combat' : '🎭 Roleplay'}
+                      {scene.is_combat ? '⚔️ Combat' : '🎭 Roleplay'}
                     </span>
                   </div>
 

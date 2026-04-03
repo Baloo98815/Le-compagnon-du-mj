@@ -21,9 +21,9 @@ export default function EnemiesPage() {
     type: '',
     size: 'Medium',
     alignment: 'Neutral',
-    ac: 10,
-    hp: 1,
-    cr: 0,
+    armor_class: 10,
+    max_hp: 1,
+    challenge_rating: '0',
   });
 
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
@@ -59,9 +59,9 @@ export default function EnemiesPage() {
         type: '',
         size: 'Medium',
         alignment: 'Neutral',
-        ac: 10,
-        hp: 1,
-        cr: 0,
+        armor_class: 10,
+        max_hp: 1,
+        challenge_rating: '0',
       });
       fetchEnemies();
     } catch (err) {
@@ -303,35 +303,38 @@ export default function EnemiesPage() {
               </select>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-            <Input
-              label="CA"
-              id="enemy-ac"
-              type="number"
-              value={newEnemy.ac}
-              onChange={(e) =>
-                setNewEnemy({ ...newEnemy, ac: parseInt(e.target.value) })
-              }
-            />
-            <Input
-              label="HP"
-              id="enemy-hp"
-              type="number"
-              value={newEnemy.hp}
-              onChange={(e) =>
-                setNewEnemy({ ...newEnemy, hp: parseInt(e.target.value) })
-              }
-            />
-            <Input
-              label="CR"
-              id="enemy-cr"
-              type="number"
-              step="0.125"
-              value={newEnemy.cr}
-              onChange={(e) =>
-                setNewEnemy({ ...newEnemy, cr: parseFloat(e.target.value) })
-              }
-            />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '6px', color: 'var(--color-leather)', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase' }}>CA</label>
+              <input
+                id="enemy-ac"
+                type="number"
+                value={newEnemy.armor_class}
+                onChange={(e) => setNewEnemy({ ...newEnemy, armor_class: parseInt(e.target.value) || 0 })}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-parchment-dark)', border: '2px solid var(--color-gold-light)', borderRadius: '4px', color: 'var(--color-leather)', fontSize: '14px', textAlign: 'center' }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '6px', color: 'var(--color-leather)', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase' }}>HP max</label>
+              <input
+                id="enemy-hp"
+                type="number"
+                value={newEnemy.max_hp}
+                onChange={(e) => setNewEnemy({ ...newEnemy, max_hp: parseInt(e.target.value) || 0 })}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-parchment-dark)', border: '2px solid var(--color-gold-light)', borderRadius: '4px', color: 'var(--color-leather)', fontSize: '14px', textAlign: 'center' }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '6px', color: 'var(--color-leather)', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase' }}>CR</label>
+              <input
+                id="enemy-cr"
+                type="text"
+                placeholder="ex: 1/2"
+                value={newEnemy.challenge_rating}
+                onChange={(e) => setNewEnemy({ ...newEnemy, challenge_rating: e.target.value })}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-parchment-dark)', border: '2px solid var(--color-gold-light)', borderRadius: '4px', color: 'var(--color-leather)', fontSize: '14px', textAlign: 'center' }}
+              />
+            </div>
           </div>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
             <Button

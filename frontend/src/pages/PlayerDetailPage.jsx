@@ -84,16 +84,20 @@ const pageStyles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
+    padding: '6px 8px',
+    borderRadius: '3px',
+    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+    border: '1px solid rgba(212, 175, 55, 0.2)',
   },
   saveLabel: {
     flex: 1,
     fontSize: '13px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-parchment)',
   },
   saveValue: {
     fontSize: '14px',
     fontWeight: 'bold',
-    color: 'var(--color-leather)',
+    color: 'var(--color-gold)',
     minWidth: '40px',
     textAlign: 'right',
   },
@@ -107,19 +111,19 @@ const pageStyles = {
     alignItems: 'center',
     gap: '8px',
     padding: '8px',
-    border: '1px solid var(--color-gold-light)',
+    border: '1px solid rgba(212, 175, 55, 0.25)',
     borderRadius: '3px',
-    backgroundColor: 'rgba(212, 175, 55, 0.05)',
+    backgroundColor: 'rgba(212, 175, 55, 0.08)',
   },
   skillLabel: {
     flex: 1,
     fontSize: '13px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-parchment)',
   },
   skillValue: {
     fontSize: '13px',
     fontWeight: 'bold',
-    color: 'var(--color-leather)',
+    color: 'var(--color-gold)',
     minWidth: '35px',
     textAlign: 'right',
   },
@@ -131,20 +135,20 @@ const pageStyles = {
   },
   combatStat: {
     padding: '12px',
-    border: '1px solid var(--color-blood)',
+    border: '1px solid rgba(139, 0, 0, 0.5)',
     borderRadius: '4px',
-    backgroundColor: 'rgba(139, 0, 0, 0.05)',
+    backgroundColor: 'rgba(139, 0, 0, 0.15)',
     textAlign: 'center',
   },
   combatStatLabel: {
     fontSize: '12px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-parchment)',
     marginBottom: '6px',
   },
   combatStatValue: {
     fontSize: '24px',
     fontWeight: 'bold',
-    color: 'var(--color-blood)',
+    color: 'var(--color-blood-light)',
   },
   equipmentList: {
     marginBottom: '20px',
@@ -182,7 +186,8 @@ const pageStyles = {
     borderRadius: '4px',
     fontFamily: 'inherit',
     fontSize: '14px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-parchment)',
+    backgroundColor: 'rgba(44, 44, 44, 0.8)',
     resize: 'vertical',
   },
   loadingState: {
@@ -198,6 +203,29 @@ const pageStyles = {
     fontWeight: 'bold',
   },
 };
+
+// Espèces jouables D&D 5.5 (2024)
+const RACES_DND5 = [
+  '',
+  'Aasimar',
+  'Autoforged',
+  'Demi-Elfe',
+  'Draconide',
+  'Elfe (Haut-Elfe)',
+  'Elfe (Elfe des Bois)',
+  'Elfe (Drow)',
+  'Gnome (des Roches)',
+  'Gnome (des Forêts)',
+  'Goliath',
+  'Halfelin (Pied-Léger)',
+  'Halfelin (Robuste)',
+  'Humain',
+  'Nain (des Collines)',
+  'Nain (des Montagnes)',
+  'Orque',
+  'Tieffelin',
+  'Autre / Personnalisé',
+];
 
 const SKILLS = [
   { name: 'Acrobatie', stat: 'dexterity' },
@@ -441,15 +469,30 @@ export default function PlayerDetailPage() {
               </div>
 
               <div style={pageStyles.formGroup}>
-                <Input
-                  label="Race"
+                <label htmlFor="player-race" style={{ display: 'block', marginBottom: '8px', color: 'var(--color-leather)', fontWeight: '600', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Espèce
+                </label>
+                <select
                   id="player-race"
-                  type="text"
                   value={formData.race}
-                  onChange={(e) =>
-                    setFormData({ ...formData, race: e.target.value })
-                  }
-                />
+                  onChange={(e) => setFormData({ ...formData, race: e.target.value })}
+                  style={{ width: '100%', padding: '12px 16px', background: 'var(--color-parchment-dark)', border: '2px solid var(--color-gold-light)', borderRadius: '4px', color: 'var(--color-leather)', fontFamily: 'inherit', fontSize: '14px' }}
+                >
+                  {RACES_DND5.map((r) => (
+                    <option key={r} value={r}>{r || '— Choisir une espèce —'}</option>
+                  ))}
+                </select>
+                {formData.race === 'Autre / Personnalisé' && (
+                  <Input
+                    label=""
+                    id="player-race-custom"
+                    type="text"
+                    placeholder="Préciser l'espèce..."
+                    value={formData.race_custom || ''}
+                    onChange={(e) => setFormData({ ...formData, race_custom: e.target.value })}
+                    style={{ marginTop: '8px' }}
+                  />
+                )}
               </div>
 
               <div style={pageStyles.formGroup}>

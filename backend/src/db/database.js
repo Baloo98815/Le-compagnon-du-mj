@@ -183,7 +183,7 @@ function initDatabase() {
       is_alive INTEGER DEFAULT 1,
       notes TEXT,
       FOREIGN KEY (scene_id) REFERENCES scenes(id) ON DELETE CASCADE,
-      FOREIGN KEY (enemy_id) REFERENCES enemies(id)
+      FOREIGN KEY (enemy_id) REFERENCES enemies(id) ON DELETE CASCADE
     );
 
     -- Tracker d'initiative

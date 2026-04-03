@@ -8,7 +8,7 @@ const logger = require('../utils/logger');
 router.get('/:sceneId', asyncHandler((req, res) => {
   const db = getDb();
   const tracker = db.prepare('SELECT * FROM initiative_trackers WHERE scene_id = ?').get(req.params.sceneId);
-  if (!tracker) return res.status(404).json({ success: false, error: 'Tracker non trouvé pour cette scène' });
+  if (!tracker) return res.json({ success: true, data: null }); // Pas encore de tracker pour cette scène
 
   const participants = db.prepare(`
     SELECT tp.*,

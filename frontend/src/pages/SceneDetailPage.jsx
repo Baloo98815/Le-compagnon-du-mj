@@ -10,7 +10,7 @@ import TokenAvatar from '../components/ui/TokenAvatar';
 import Layout from '../components/layout/Layout';
 
 export default function SceneDetailPage() {
-  const { sceneId } = useParams();
+  const { id: sceneId } = useParams();
   const navigate = useNavigate();
   const [scene, setScene] = useState(null);
   const [allEnemies, setAllEnemies] = useState([]);
@@ -402,17 +402,16 @@ export default function SceneDetailPage() {
           </Button>
         </div>
 
-        {scene.scene_enemies && scene.scene_enemies.length > 0 ? (
-          scene.scene_enemies.map((sceneEnemy) => {
-            const enemy = sceneEnemy.enemy;
+        {scene.enemy_instances && scene.enemy_instances.length > 0 ? (
+          scene.enemy_instances.map((sceneEnemy) => {
             return (
               <div key={sceneEnemy.id} style={sectionItemStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
-                  <TokenAvatar name={enemy.name} image={enemy.token_image} size="md" />
+                  <TokenAvatar name={sceneEnemy.enemy_name} image={sceneEnemy.enemy_token} size="md" />
                   <div>
-                    <strong>{enemy.name}</strong>
+                    <strong>{sceneEnemy.enemy_name}</strong>
                     <div style={{ fontSize: '0.85rem', color: '#666' }}>
-                      CR {enemy.cr} • CA {enemy.ac} • HP {enemy.hp}
+                      {sceneEnemy.enemy_cr ? `CR ${sceneEnemy.enemy_cr} • ` : ''}CA {sceneEnemy.armor_class} • HP {sceneEnemy.max_hp}
                     </div>
                   </div>
                 </div>
@@ -560,6 +559,11 @@ export default function SceneDetailPage() {
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
               Ennemi
             </label>
+            {allEnemies.length === 0 ? (
+              <p style={{ color: 'var(--color-blood)', fontSize: '14px' }}>
+                Aucun ennemi disponible. Créez d'abord des ennemis dans le Bestiaire.
+              </p>
+            ) : (
             <select
               value={selectedEnemyId}
               onChange={(e) => setSelectedEnemyId(e.target.value)}
@@ -574,11 +578,13 @@ export default function SceneDetailPage() {
               <option value="">-- Sélectionner un ennemi --</option>
               {allEnemies.map((enemy) => (
                 <option key={enemy.id} value={enemy.id}>
-                  {enemy.name} (CR {enemy.cr})
+                  {enemy.name} {enemy.challenge_rating ? `(CR ${enemy.challenge_rating})` : ''}
                 </option>
               ))}
             </select>
+            )}
           </div>
+          {error && <p style={{ color: 'var(--color-blood)', fontSize: '13px', margin: 0 }}>{error}</p>}
           <Input
             label="Quantité"
             id="enemy-quantity"
