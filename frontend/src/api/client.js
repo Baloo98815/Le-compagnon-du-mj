@@ -12,9 +12,13 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Intercepteur réponse : extraire data ou lever l'erreur
+// Intercepteur réponse : extraire le champ "data" du corps { success, data }
+// ou retourner le corps complet si pas de champ "data" (ex: { success, message })
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    const body = response.data;
+    return body?.data !== undefined ? body.data : body;
+  },
   (error) => {
     const message = error.response?.data?.error || error.message || 'Erreur réseau';
     return Promise.reject(new Error(message));
@@ -46,7 +50,7 @@ export const playersAPI = {
     form.append('token', file);
     return axios.post(`/api/players/${id}/token`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
-    }).then(r => r.data);
+    }).then(r => r.data?.data ?? r.data);
   },
 };
 
@@ -62,7 +66,7 @@ export const enemiesAPI = {
     form.append('token', file);
     return axios.post(`/api/enemies/${id}/token`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
-    }).then(r => r.data);
+    }).then(r => r.data?.data ?? r.data);
   },
 };
 

@@ -7,6 +7,7 @@ import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
 import TokenAvatar from '../components/ui/TokenAvatar';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
+import Layout from '../components/layout/Layout';
 
 export default function EnemiesPage() {
   const navigate = useNavigate();
@@ -160,6 +161,7 @@ export default function EnemiesPage() {
   };
 
   return (
+    <Layout>
     <div style={containerStyle} data-testid="enemies-page">
       <div style={headerStyle}>
         <h1 style={titleStyle}>Bestiaire</h1>
@@ -357,5 +359,6 @@ export default function EnemiesPage() {
         danger
       />
     </div>
+    </Layout>
   );
 }

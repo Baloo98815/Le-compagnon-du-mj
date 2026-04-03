@@ -2,9 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
+import { initClientLogger } from './utils/clientLogger'
+
+// Initialiser la capture d'erreurs frontend dès le démarrage
+initClientLogger()
 
 import './styles/index.css'
-import Layout from './components/layout/Layout'
 import CampaignsPage from './pages/CampaignsPage'
 import CampaignDetailPage from './pages/CampaignDetailPage'
 import PlayersPage from './pages/PlayersPage'
@@ -33,17 +36,15 @@ createRoot(document.getElementById('root')).render(
         {/* Écran du MJ (sans navbar) */}
         <Route path="/dm" element={<DMScreenPage />} />
 
-        {/* Routes avec layout standard */}
-        <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/campaigns" replace />} />
-          <Route path="/campaigns" element={<CampaignsPage />} />
-          <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
-          <Route path="/players" element={<PlayersPage />} />
-          <Route path="/players/:id" element={<PlayerDetailPage />} />
-          <Route path="/enemies" element={<EnemiesPage />} />
-          <Route path="/enemies/:id" element={<EnemyDetailPage />} />
-          <Route path="/scenes/:id" element={<SceneDetailPage />} />
-        </Route>
+        {/* Routes — chaque page gère son propre Layout */}
+        <Route path="/" element={<Navigate to="/campaigns" replace />} />
+        <Route path="/campaigns" element={<CampaignsPage />} />
+        <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
+        <Route path="/players" element={<PlayersPage />} />
+        <Route path="/players/:id" element={<PlayerDetailPage />} />
+        <Route path="/enemies" element={<EnemiesPage />} />
+        <Route path="/enemies/:id" element={<EnemyDetailPage />} />
+        <Route path="/scenes/:id" element={<SceneDetailPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

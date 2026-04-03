@@ -1,0 +1,5 @@
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "exec": "node --no-warnings=ExperimentalWarning src/server.js"
+}

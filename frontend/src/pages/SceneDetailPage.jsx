@@ -7,6 +7,7 @@ import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
 import TokenAvatar from '../components/ui/TokenAvatar';
+import Layout from '../components/layout/Layout';
 
 export default function SceneDetailPage() {
   const { sceneId } = useParams();
@@ -129,17 +130,21 @@ export default function SceneDetailPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        Chargement...
-      </div>
+      <Layout>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          Chargement...
+        </div>
+      </Layout>
     );
   }
 
   if (!scene) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        Scène non trouvée
-      </div>
+      <Layout>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          Scène non trouvée
+        </div>
+      </Layout>
     );
   }
 
@@ -219,6 +224,7 @@ export default function SceneDetailPage() {
   };
 
   return (
+    <Layout>
     <div style={containerStyle} data-testid="scene-detail-page">
       {error && <div style={errorStyle}>{error}</div>}
 
@@ -616,5 +622,6 @@ export default function SceneDetailPage() {
         danger
       />
     </div>
+    </Layout>
   );
 }

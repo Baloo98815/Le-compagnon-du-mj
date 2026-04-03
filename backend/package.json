@@ -5,9 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node --no-warnings=ExperimentalWarning src/server.js",
-    "dev": "nodemon --exec 'node --no-warnings=ExperimentalWarning' src/server.js",
-    "test": "node --no-warnings=ExperimentalWarning ./node_modules/.bin/jest --forceExit --detectOpenHandles",
-    "test:watch": "jest --watch"
+    "dev": "nodemon",
+    "test": "node --no-warnings=ExperimentalWarning ./node_modules/jest/bin/jest.js --forceExit --detectOpenHandles",
+    "test:watch": "node --no-warnings=ExperimentalWarning ./node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
     "cors": "^2.8.5",

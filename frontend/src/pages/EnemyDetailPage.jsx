@@ -5,6 +5,7 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import TokenAvatar from '../components/ui/TokenAvatar';
 import StatBlock from '../components/ui/StatBlock';
+import Layout from '../components/layout/Layout';
 
 const CONDITIONS = [
   { id: 'blinded', label: 'Aveuglé', color: '#888888' },
@@ -119,17 +120,21 @@ export default function EnemyDetailPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        Chargement...
-      </div>
+      <Layout>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          Chargement...
+        </div>
+      </Layout>
     );
   }
 
   if (!enemy) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        Ennemi non trouvé
-      </div>
+      <Layout>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          Ennemi non trouvé
+        </div>
+      </Layout>
     );
   }
 
@@ -228,6 +233,7 @@ export default function EnemyDetailPage() {
   };
 
   return (
+    <Layout>
     <div style={containerStyle} data-testid="enemy-detail-page">
       {error && <div style={errorStyle}>{error}</div>}
 
@@ -882,5 +888,6 @@ export default function EnemyDetailPage() {
         </Button>
       </div>
     </div>
+    </Layout>
   );
 }

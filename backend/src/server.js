@@ -32,6 +32,12 @@ app.use('/api/players', require('./routes/players'));
 app.use('/api/enemies', require('./routes/enemies'));
 app.use('/api/scenes', require('./routes/scenes'));
 app.use('/api/tracker', require('./routes/tracker'));
+app.use('/api/logs', require('./routes/logs'));
+
+// Route racine — info API
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'Le Compagnon du MJ - API', version: '1.0.0', docs: '/api/health' });
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
