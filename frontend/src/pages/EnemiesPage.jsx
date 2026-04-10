@@ -197,9 +197,9 @@ export default function EnemiesPage() {
                   <h3 style={cardNameStyle}>{enemy.name}</h3>
                   <div style={cardStatsStyle}>
                     {enemy.type && <div>Type: {enemy.type}</div>}
-                    <div>CR: {enemy.cr}</div>
-                    <div>CA: {enemy.ac}</div>
-                    <div>HP: {enemy.hp}</div>
+                    <div>CR: {enemy.challenge_rating ?? '—'}</div>
+                    <div>CA: {enemy.armor_class ?? '—'}</div>
+                    <div>HP: {enemy.max_hp ?? '—'}</div>
                   </div>
                 </div>
                 <div

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { scenesAPI, trackerAPI, playersAPI } from '../api/client';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
@@ -27,6 +27,7 @@ const CONDITIONS = [
 
 export default function DMScreenPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const sceneId = searchParams.get('scene');
 
   const [scene, setScene] = useState(null);
@@ -108,19 +109,19 @@ export default function DMScreenPage() {
       for (const playerId of selectedPlayers) {
         const initiative = initiativeValues[`player-${playerId}`] || 10;
         participants.push({
-          type: 'player',
-          entity_id: playerId,
+          participant_type: 'player',
+          participant_id: playerId,
           initiative,
         });
       }
 
       // Ajouter les ennemis de la scène
-      if (scene.scene_enemies) {
-        for (const sceneEnemy of scene.scene_enemies) {
+      if (scene.enemy_instances) {
+        for (const sceneEnemy of scene.enemy_instances) {
           const initiative = initiativeValues[`enemy-${sceneEnemy.id}`] || 10;
           participants.push({
-            type: 'enemy',
-            entity_id: sceneEnemy.id,
+            participant_type: 'enemy_instance',
+            participant_id: sceneEnemy.id,
             initiative,
           });
         }
@@ -131,8 +132,8 @@ export default function DMScreenPage() {
         for (const npc of scene.npcs) {
           const initiative = initiativeValues[`npc-${npc.id}`] || 10;
           participants.push({
-            type: 'npc',
-            entity_id: npc.id,
+            participant_type: 'npc',
+            participant_id: npc.id,
             initiative,
           });
         }
@@ -188,6 +189,18 @@ export default function DMScreenPage() {
     }
   };
 
+  const handleStopTracker = async () => {
+    if (!scene) return;
+    try {
+      await trackerAPI.delete(scene.id);
+      setTracker(null);
+      setShowInitiativeForm(false);
+      setInitiativeValues({});
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleAddParticipant = async () => {
     if (!scene || !newParticipantId) {
       setError('Veuillez sélectionner un participant');
@@ -195,8 +208,8 @@ export default function DMScreenPage() {
     }
     try {
       await trackerAPI.addParticipant(scene.id, {
-        type: newParticipantType,
-        entity_id: newParticipantId,
+        participant_type: newParticipantType === 'enemy' ? 'enemy_instance' : newParticipantType,
+        participant_id: newParticipantId,
         initiative: newParticipantInitiative,
       });
       fetchScene(scene.id);
@@ -210,48 +223,18 @@ export default function DMScreenPage() {
   };
 
   const getParticipantName = (participant) => {
-    if (participant.type === 'player' && participant.player) {
-      return participant.player.name;
-    }
-    if (participant.type === 'npc' && participant.npc) {
-      return participant.npc.name;
-    }
-    if (participant.type === 'enemy' && participant.scene_enemy?.enemy) {
-      return participant.scene_enemy.enemy.name;
-    }
-    return 'Inconnu';
+    return participant.display_name || 'Inconnu';
   };
 
   const getParticipantImage = (participant) => {
-    if (participant.type === 'player' && participant.player) {
-      return participant.player.token_image;
-    }
-    if (participant.type === 'enemy' && participant.scene_enemy?.enemy) {
-      return participant.scene_enemy.enemy.token_image;
-    }
-    return null;
+    return participant.token_image || null;
   };
 
   const getParticipantStats = (participant) => {
-    if (participant.type === 'player' && participant.player) {
-      return {
-        ca: participant.player.ac,
-        hpMax: participant.player.hp,
-      };
-    }
-    if (participant.type === 'npc' && participant.npc) {
-      return {
-        ca: participant.npc.ca,
-        hpMax: participant.npc.hp,
-      };
-    }
-    if (participant.type === 'enemy' && participant.scene_enemy?.enemy) {
-      return {
-        ca: participant.scene_enemy.enemy.ac,
-        hpMax: participant.scene_enemy.enemy.hp,
-      };
-    }
-    return { ca: 10, hpMax: 10 };
+    return {
+      ca: participant.armor_class ?? 10,
+      hpMax: participant.max_hp ?? 10,
+    };
   };
 
   if (loading) {
@@ -431,9 +414,19 @@ export default function DMScreenPage() {
       {error && <div style={errorStyle}>{error}</div>}
 
       <div style={headerStyle}>
-        <h1 style={{ margin: 0, color: 'var(--color-blood)', fontSize: '1.8rem' }}>
-          {scene ? `Écran MJ - ${scene.name}` : 'Écran MJ'}
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{ ...settingsButtonStyle, fontSize: '1rem', padding: '0.4rem 0.8rem', border: '1px solid var(--color-leather)', borderRadius: '4px', backgroundColor: 'white' }}
+            data-testid="back-btn"
+            title="Retour"
+          >
+            ← Retour
+          </button>
+          <h1 style={{ margin: 0, color: 'var(--color-blood)', fontSize: '1.8rem' }}>
+            {scene ? `Écran MJ - ${scene.name}` : 'Écran MJ'}
+          </h1>
+        </div>
         <button
           onClick={() => setShowSettings(!showSettings)}
           style={settingsButtonStyle}
@@ -615,7 +608,7 @@ export default function DMScreenPage() {
                         );
                       })}
 
-                      {scene.scene_enemies?.map((sceneEnemy) => (
+                      {scene.enemy_instances?.map((sceneEnemy) => (
                         <div
                           key={`enemy-${sceneEnemy.id}`}
                           style={{
@@ -626,7 +619,7 @@ export default function DMScreenPage() {
                           }}
                         >
                           <label style={{ flex: 1 }}>
-                            {sceneEnemy.enemy.name}
+                            {sceneEnemy.enemy_name || sceneEnemy.instance_name}
                           </label>
                           <input
                             type="number"
@@ -720,23 +713,32 @@ export default function DMScreenPage() {
                         marginBottom: 0,
                       }}
                     >
-                      Tracker d'initiative - Round {tracker.current_round}
+                      Tracker d'initiative - Round {tracker.round}
                     </h2>
-                    <Button
-                      variant="primary"
-                      onClick={handleNextTurn}
-                      data-testid="next-turn-btn"
-                    >
-                      Tour suivant →
-                    </Button>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <Button
+                        variant="primary"
+                        onClick={handleNextTurn}
+                        data-testid="next-turn-btn"
+                      >
+                        Tour suivant →
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={handleStopTracker}
+                        data-testid="stop-tracker-btn"
+                      >
+                        ✕ Arrêter le combat
+                      </Button>
+                    </div>
                   </div>
 
                   <div style={trackerContainerStyle} data-testid="initiative-tracker">
                     <div style={initiativeTrackStyle}>
                       {tracker.participants?.map((participant, idx) => {
                         const stats = getParticipantStats(participant);
-                        const isActive = tracker.current_participant_index === idx;
-                        const isDead = participant.hp <= 0 && participant.type !== 'player';
+                        const isActive = tracker.current_turn === idx;
+                        const isDead = participant.current_hp <= 0 && participant.participant_type !== 'player';
                         const style = isDead
                           ? deadTokenSlotStyle
                           : isActive
@@ -758,16 +760,16 @@ export default function DMScreenPage() {
                             <div
                               style={{
                                 ...hpDisplayStyle,
-                                ...(participant.hp <= stats.hpMax / 2 &&
-                                participant.hp > 0
+                                ...(participant.current_hp <= stats.hpMax / 2 &&
+                                participant.current_hp > 0
                                   ? hpDangerStyle
                                   : {}),
                               }}
                             >
-                              {Math.max(0, participant.hp)}/{stats.hpMax}
+                              {Math.max(0, participant.current_hp)}/{stats.hpMax}
                             </div>
 
-                            {participant.hp <= 0 && participant.type !== 'player' && (
+                            {participant.current_hp <= 0 && participant.participant_type !== 'player' && (
                               <div
                                 style={{
                                   fontSize: '0.8rem',
@@ -779,7 +781,7 @@ export default function DMScreenPage() {
                               </div>
                             )}
 
-                            {participant.hp <= 0 && participant.type === 'player' && (
+                            {participant.current_hp <= 0 && participant.participant_type === 'player' && (
                               <div
                                 style={{
                                   fontSize: '0.8rem',
@@ -1122,9 +1124,9 @@ export default function DMScreenPage() {
                   </option>
                 ))}
               {newParticipantType === 'enemy' &&
-                scene?.scene_enemies?.map((e) => (
+                scene?.enemy_instances?.map((e) => (
                   <option key={e.id} value={e.id}>
-                    {e.enemy.name}
+                    {e.enemy_name || e.instance_name}
                   </option>
                 ))}
             </select>

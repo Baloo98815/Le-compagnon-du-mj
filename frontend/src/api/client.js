@@ -94,6 +94,7 @@ export const scenesAPI = {
 export const trackerAPI = {
   get: (sceneId) => api.get(`/tracker/${sceneId}`),
   create: (sceneId) => api.post(`/tracker/${sceneId}`),
+  delete: (sceneId) => api.delete(`/tracker/${sceneId}`),
   addParticipant: (sceneId, data) => api.post(`/tracker/${sceneId}/participants`, data),
   updateHp: (sceneId, participantId, delta) => api.patch(`/tracker/${sceneId}/participants/${participantId}/hp`, { delta }),
   updateConditions: (sceneId, participantId, conditions) => api.patch(`/tracker/${sceneId}/participants/${participantId}/conditions`, { conditions }),

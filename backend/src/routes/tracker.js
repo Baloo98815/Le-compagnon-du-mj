@@ -164,6 +164,17 @@ router.delete('/:sceneId/participants/:participantId', asyncHandler((req, res) =
   res.json({ success: true, message: 'Participant retiré du tracker' });
 }));
 
+// DELETE /api/tracker/:sceneId - Supprimer/arrêter le tracker
+router.delete('/:sceneId', asyncHandler((req, res) => {
+  const db = getDb();
+  const tracker = db.prepare('SELECT id FROM initiative_trackers WHERE scene_id = ?').get(req.params.sceneId);
+  if (!tracker) return res.json({ success: true, message: 'Pas de tracker à supprimer' });
+  db.prepare('DELETE FROM tracker_participants WHERE tracker_id = ?').run(tracker.id);
+  db.prepare('DELETE FROM initiative_trackers WHERE id = ?').run(tracker.id);
+  logger.info('Tracker supprimé', { sceneId: req.params.sceneId });
+  res.json({ success: true, message: 'Tracker supprimé' });
+}));
+
 // PATCH /api/tracker/:sceneId/turn - Passer au tour suivant
 router.patch('/:sceneId/turn', asyncHandler((req, res) => {
   const db = getDb();
