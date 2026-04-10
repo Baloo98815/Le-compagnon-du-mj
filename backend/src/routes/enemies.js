@@ -29,13 +29,43 @@ const upload = multer({
   },
 });
 
-const JSON_FIELDS = ['abilities', 'actions', 'reactions', 'legendary_actions', 'damage_resistances', 'damage_immunities', 'condition_immunities', 'senses', 'speed'];
+// Champs stockés en JSON dans la DB (tableaux d'objets)
+const JSON_FIELDS = ['abilities', 'actions', 'reactions', 'legendary_actions', 'damage_resistances', 'damage_immunities', 'condition_immunities'];
 
+// senses et speed sont des champs texte libre (pas JSON)
 function parseEnemy(enemy) {
   if (!enemy) return null;
   const parsed = { ...enemy };
+  // Champs JSON (tableaux)
   for (const f of JSON_FIELDS) {
-    try { parsed[f] = JSON.parse(parsed[f] || (f === 'senses' || f === 'speed' ? '{}' : '[]')); } catch { }
+    try { parsed[f] = JSON.parse(parsed[f] || '[]'); } catch { parsed[f] = []; }
+  }
+  // senses : stocker comme texte libre (migration depuis ancien format JSON objet)
+  if (parsed.senses && typeof parsed.senses === 'string') {
+    try {
+      const s = JSON.parse(parsed.senses);
+      // Si c'était un objet vide ou un objet, convertir en chaîne
+      parsed.senses = typeof s === 'object' ? '' : String(s);
+    } catch {
+      // Déjà une chaîne normale, laisser tel quel
+    }
+  } else {
+    parsed.senses = parsed.senses || '';
+  }
+  // speed : stocker comme texte libre (migration depuis ancien format JSON objet)
+  if (parsed.speed && typeof parsed.speed === 'string') {
+    try {
+      const sp = JSON.parse(parsed.speed);
+      if (typeof sp === 'object' && sp !== null) {
+        // Convertir {marche: 30} en "30 ft" ou équivalent lisible
+        const parts = Object.entries(sp).map(([k, v]) => `${v} ft (${k})`);
+        parsed.speed = parts.length ? parts.join(', ') : '';
+      }
+    } catch {
+      // Déjà une chaîne normale
+    }
+  } else {
+    parsed.speed = parsed.speed || '';
   }
   return parsed;
 }

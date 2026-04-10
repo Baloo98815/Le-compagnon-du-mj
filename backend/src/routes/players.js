@@ -46,9 +46,10 @@ router.get('/:id', asyncHandler((req, res) => {
 
   // Parse JSON fields
   player.skills = JSON.parse(player.skills || '{}');
-  player.resistances = JSON.parse(player.resistances || '[]');
-  player.immunities = JSON.parse(player.immunities || '[]');
   player.equipment = JSON.parse(player.equipment || '[]');
+  // resistances et immunities : retourner comme texte lisible (migration depuis ancien format JSON)
+  player.resistances = toPlainText(player.resistances);
+  player.immunities = toPlainText(player.immunities);
 
   // Campagnes associées
   const campaigns = db.prepare(`
@@ -124,6 +125,18 @@ router.post('/:id/token', upload.single('token'), asyncHandler((req, res) => {
   logger.info('Token joueur mis à jour', { id: req.params.id, file: tokenUrl });
   res.json({ success: true, data: { token_image: tokenUrl } });
 }));
+
+// Convertit une valeur en texte lisible (gère l'ancien format JSON array)
+function toPlainText(value) {
+  if (!value) return '';
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.join(', ');
+    return String(parsed);
+  } catch {
+    return value; // Déjà une chaîne normale
+  }
+}
 
 // Helpers
 function buildPlayerFields(data) {

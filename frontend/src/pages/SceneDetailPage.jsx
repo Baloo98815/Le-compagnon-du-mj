@@ -21,7 +21,7 @@ export default function SceneDetailPage() {
   const [newLocation, setNewLocation] = useState({ name: '', map_url: '' });
 
   const [showAddNpcModal, setShowAddNpcModal] = useState(false);
-  const [newNpc, setNewNpc] = useState({ name: '', role: '', ca: 10, hp: 10, notes: '' });
+  const [newNpc, setNewNpc] = useState({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
 
   const [showAddEnemyModal, setShowAddEnemyModal] = useState(false);
   const [selectedEnemyId, setSelectedEnemyId] = useState('');
@@ -83,7 +83,7 @@ export default function SceneDetailPage() {
     try {
       await scenesAPI.addNpc(sceneId, newNpc);
       setShowAddNpcModal(false);
-      setNewNpc({ name: '', role: '', ca: 10, hp: 10, notes: '' });
+      setNewNpc({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
       fetchSceneAndEnemies();
     } catch (err) {
       setError(err.message);
@@ -505,20 +505,20 @@ export default function SceneDetailPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <Input
               label="CA"
-              id="npc-ca"
+              id="npc-armor-class"
               type="number"
-              value={newNpc.ca}
+              value={newNpc.armor_class}
               onChange={(e) =>
-                setNewNpc({ ...newNpc, ca: parseInt(e.target.value) })
+                setNewNpc({ ...newNpc, armor_class: parseInt(e.target.value) })
               }
             />
             <Input
-              label="HP"
-              id="npc-hp"
+              label="HP max"
+              id="npc-max-hp"
               type="number"
-              value={newNpc.hp}
+              value={newNpc.max_hp}
               onChange={(e) =>
-                setNewNpc({ ...newNpc, hp: parseInt(e.target.value) })
+                setNewNpc({ ...newNpc, max_hp: parseInt(e.target.value) })
               }
             />
           </div>

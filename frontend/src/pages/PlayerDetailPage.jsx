@@ -283,13 +283,20 @@ export default function PlayerDetailPage() {
     wisdom: 10,
     charisma: 10,
     armor_class: 10,
-    initiative: 0,
+    initiative_bonus: 0,
     speed: 30,
     max_hp: 10,
     current_hp: 10,
     passive_perception: 10,
     passive_investigation: 10,
     passive_insight: 10,
+    proficiency_bonus: 2,
+    save_strength: 0,
+    save_dexterity: 0,
+    save_constitution: 0,
+    save_intelligence: 0,
+    save_wisdom: 0,
+    save_charisma: 0,
     strength_save_proficient: false,
     dexterity_save_proficient: false,
     constitution_save_proficient: false,
@@ -316,10 +323,19 @@ export default function PlayerDetailPage() {
       const data = await playersAPI.getById(id);
       setPlayer(data);
 
+      // Déduire les cases "maîtrise" depuis les valeurs de sauvegarde stockées
+      const profBonus = data.proficiency_bonus || 2;
+      const saveProficients = {};
+      for (const stat of ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']) {
+        const modifier = Math.floor(((data[stat] || 10) - 10) / 2);
+        const savedBonus = data[`save_${stat}`] || 0;
+        saveProficients[`${stat}_save_proficient`] = savedBonus > modifier;
+      }
       setFormData((prev) => ({
         ...prev,
         ...data,
         skills: data.skills || {},
+        ...saveProficients,
       }));
 
       setEquipment(data.equipment || []);
@@ -335,8 +351,18 @@ export default function PlayerDetailPage() {
   const handleSavePlayer = async () => {
     try {
       setIsSaving(true);
+      // Calculer les vrais bonus de sauvegarde depuis les cases à cocher
+      const saveValues = {
+        save_strength: calculateSaveValue('strength'),
+        save_dexterity: calculateSaveValue('dexterity'),
+        save_constitution: calculateSaveValue('constitution'),
+        save_intelligence: calculateSaveValue('intelligence'),
+        save_wisdom: calculateSaveValue('wisdom'),
+        save_charisma: calculateSaveValue('charisma'),
+      };
       await playersAPI.update(id, {
         ...formData,
+        ...saveValues,
         equipment,
       });
 
@@ -393,7 +419,7 @@ export default function PlayerDetailPage() {
   const calculateSaveValue = (stat) => {
     const modifier = calculateModifier(formData[stat]);
     const profKey = `${stat}_save_proficient`;
-    const profBonus = formData[profKey] ? 2 : 0;
+    const profBonus = formData[profKey] ? (formData.proficiency_bonus || 2) : 0;
     return modifier + profBonus;
   };
 
@@ -613,13 +639,13 @@ export default function PlayerDetailPage() {
             </div>
 
             <div style={pageStyles.combatStat}>
-              <div style={pageStyles.combatStatLabel}>Initiative</div>
+              <div style={pageStyles.combatStatLabel}>Bonus d'initiative</div>
               <Input
                 id="initiative-input"
                 type="number"
-                value={formData.initiative}
+                value={formData.initiative_bonus}
                 onChange={(e) =>
-                  setFormData({ ...formData, initiative: parseInt(e.target.value, 10) })
+                  setFormData({ ...formData, initiative_bonus: parseInt(e.target.value, 10) })
                 }
                 style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold' }}
               />
@@ -677,6 +703,22 @@ export default function PlayerDetailPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, passive_perception: parseInt(e.target.value, 10) })
                 }
+                style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold' }}
+              />
+            </div>
+          </div>
+
+          <div style={pageStyles.combatGrid}>
+            <div style={pageStyles.combatStat}>
+              <div style={pageStyles.combatStatLabel}>Bonus de maîtrise</div>
+              <Input
+                id="proficiency-input"
+                type="number"
+                value={formData.proficiency_bonus}
+                onChange={(e) =>
+                  setFormData({ ...formData, proficiency_bonus: parseInt(e.target.value, 10) })
+                }
+                data-testid="proficiency-input"
                 style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold' }}
               />
             </div>

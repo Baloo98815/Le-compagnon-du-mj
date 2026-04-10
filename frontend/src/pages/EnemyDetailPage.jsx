@@ -78,11 +78,17 @@ export default function EnemyDetailPage() {
     setEnemy({ ...enemy, [field]: value });
   };
 
-  const updateStat = (stat, value) => {
-    setEnemy({
-      ...enemy,
-      abilities: { ...enemy.abilities, [stat]: value },
-    });
+  const STAT_KEYS = [
+    { key: 'strength',     label: 'FOR' },
+    { key: 'dexterity',    label: 'DEX' },
+    { key: 'constitution', label: 'CON' },
+    { key: 'intelligence', label: 'INT' },
+    { key: 'wisdom',       label: 'SAG' },
+    { key: 'charisma',     label: 'CHA' },
+  ];
+
+  const updateStat = (statKey, value) => {
+    setEnemy({ ...enemy, [statKey]: value });
   };
 
   const updateCapabilities = (type, index, field, value) => {
@@ -363,11 +369,11 @@ export default function EnemyDetailPage() {
           </div>
           <Input
             label="CR"
-            id="cr"
-            type="number"
-            step="0.125"
-            value={enemy.cr || 0}
-            onChange={(e) => updateField('cr', parseFloat(e.target.value))}
+            id="challenge_rating"
+            type="text"
+            placeholder="ex: 1/2"
+            value={enemy.challenge_rating || ''}
+            onChange={(e) => updateField('challenge_rating', e.target.value)}
           />
           <div></div>
         </div>
@@ -376,17 +382,17 @@ export default function EnemyDetailPage() {
       <div style={infoBoxStyle}>
         <h2 style={sectionTitleStyle}>Caractéristiques</h2>
         <div style={statsGridStyle}>
-          {['str', 'dex', 'con', 'int', 'wis', 'cha'].map((stat) => (
-            <div key={stat}>
+          {STAT_KEYS.map(({ key, label }) => (
+            <div key={key}>
               <StatBlock
-                name={stat.toUpperCase()}
-                value={enemy.abilities?.[stat] || 10}
+                name={label}
+                value={enemy[key] || 10}
                 proficient={false}
               />
               <input
                 type="number"
-                value={enemy.abilities?.[stat] || 10}
-                onChange={(e) => updateStat(stat, parseInt(e.target.value))}
+                value={enemy[key] || 10}
+                onChange={(e) => updateStat(key, parseInt(e.target.value))}
                 style={{
                   width: '100%',
                   padding: '0.25rem',
@@ -408,22 +414,23 @@ export default function EnemyDetailPage() {
         <div style={combatStatsStyle}>
           <Input
             label="CA"
-            id="ac"
+            id="armor_class"
             type="number"
-            value={enemy.ac || 10}
-            onChange={(e) => updateField('ac', parseInt(e.target.value))}
+            value={enemy.armor_class || 10}
+            onChange={(e) => updateField('armor_class', parseInt(e.target.value))}
           />
           <Input
-            label="HP"
-            id="hp"
+            label="HP max"
+            id="max_hp"
             type="number"
-            value={enemy.hp || 1}
-            onChange={(e) => updateField('hp', parseInt(e.target.value))}
+            value={enemy.max_hp || 1}
+            onChange={(e) => updateField('max_hp', parseInt(e.target.value))}
           />
           <Input
             label="Vitesse"
             id="speed"
-            value={enemy.speed || '30 ft'}
+            placeholder="ex: 30 ft"
+            value={typeof enemy.speed === 'object' ? '' : (enemy.speed || '')}
             onChange={(e) => updateField('speed', e.target.value)}
           />
         </div>
@@ -606,14 +613,14 @@ export default function EnemyDetailPage() {
         <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#444' }}>
           Capacités spéciales
         </h3>
-        {(enemy.special_abilities || []).map((ability, idx) => (
+        {(enemy.abilities || []).map((ability, idx) => (
           <div key={idx} style={capabilityItemStyle}>
             <input
               type="text"
               placeholder="Nom de la capacité"
               value={ability.name || ''}
               onChange={(e) =>
-                updateCapabilities('special_abilities', idx, 'name', e.target.value)
+                updateCapabilities('abilities', idx, 'name', e.target.value)
               }
               style={{
                 width: '100%',
@@ -629,7 +636,7 @@ export default function EnemyDetailPage() {
               placeholder="Description"
               value={ability.description || ''}
               onChange={(e) =>
-                updateCapabilities('special_abilities', idx, 'description', e.target.value)
+                updateCapabilities('abilities', idx, 'description', e.target.value)
               }
               style={{
                 width: '100%',
@@ -644,7 +651,7 @@ export default function EnemyDetailPage() {
             <Button
               size="sm"
               variant="danger"
-              onClick={() => removeCapability('special_abilities', idx)}
+              onClick={() => removeCapability('abilities', idx)}
               style={{ marginTop: '0.5rem' }}
             >
               Supprimer
@@ -654,7 +661,7 @@ export default function EnemyDetailPage() {
         <Button
           size="sm"
           variant="secondary"
-          onClick={() => addCapability('special_abilities')}
+          onClick={() => addCapability('abilities')}
           style={{ marginTop: '0.5rem' }}
         >
           + Ajouter une capacité spéciale
