@@ -139,19 +139,22 @@ function toPlainText(value) {
 }
 
 // Helpers
+// Champs autorisés en INSERT/UPDATE — exactement les colonnes de la table `players`
+// hors `id`, `token_image` (route dédiée), `created_at`, `updated_at` (gérés par DB).
+const PLAYER_FIELDS = [
+  'name', 'race', 'class', 'level',
+  'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma',
+  'save_strength', 'save_dexterity', 'save_constitution', 'save_intelligence', 'save_wisdom', 'save_charisma',
+  'skills', 'resistances', 'immunities', 'equipment',
+  'armor_class', 'initiative_bonus', 'max_hp', 'current_hp', 'speed',
+  'passive_perception', 'passive_investigation', 'passive_insight',
+  'proficiency_bonus', 'notes'
+];
+
 function buildPlayerFields(data) {
-  const allowed = [
-    'name', 'race', 'class', 'level',
-    'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma',
-    'save_strength', 'save_dexterity', 'save_constitution', 'save_intelligence', 'save_wisdom', 'save_charisma',
-    'skills', 'resistances', 'immunities', 'equipment',
-    'armor_class', 'initiative_bonus', 'max_hp', 'current_hp', 'speed',
-    'passive_perception', 'passive_investigation', 'passive_insight',
-    'proficiency_bonus', 'notes'
-  ];
   const columns = [];
   const values = [];
-  for (const key of allowed) {
+  for (const key of PLAYER_FIELDS) {
     if (data[key] !== undefined) {
       columns.push(key);
       const val = (typeof data[key] === 'object') ? JSON.stringify(data[key]) : data[key];
@@ -162,18 +165,9 @@ function buildPlayerFields(data) {
 }
 
 function buildPlayerUpdates(data) {
-  const allowed = [
-    'name', 'race', 'class', 'level',
-    'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma',
-    'save_strength', 'save_dexterity', 'save_constitution', 'save_intelligence', 'save_wisdom', 'save_charisma',
-    'skills', 'resistances', 'immunities', 'equipment',
-    'armor_class', 'initiative_bonus', 'max_hp', 'current_hp', 'speed',
-    'passive_perception', 'passive_investigation', 'passive_insight',
-    'proficiency_bonus', 'notes'
-  ];
   const sets = [];
   const values = [];
-  for (const key of allowed) {
+  for (const key of PLAYER_FIELDS) {
     if (data[key] !== undefined) {
       sets.push(`${key} = ?`);
       const val = (typeof data[key] === 'object') ? JSON.stringify(data[key]) : data[key];
