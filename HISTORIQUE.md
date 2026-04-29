@@ -88,4 +88,20 @@ Première version fonctionnelle du Compagnon du MJ pour **D&D 5.5 (2024)**.
 - Workspace racine avec `concurrently` pour lancer backend et frontend en parallèle
 - Scripts npm `dev`, `build`, `test` à la racine
 - `.gitignore` (node_modules, builds, base de données, logs, uploads)
-- Doc
+- Documentation initiale : `README.md` racine, plus dans `frontend/` : `README.md`, `INDEX_PAGES.md`, `PAGES_INTEGRATION.md`, `PAGES_SUMMARY.txt`, `README_PAGES.md`, `ROUTING_EXAMPLE.jsx`, `SETUP_CHECKLIST.md`, `TESTID_REFERENCE.md`
+
+---
+
+## Synthèse des commits
+
+| Hash       | Date       | Sujet                                                                  |
+|------------|------------|------------------------------------------------------------------------|
+| `5d60ca1`  | 2026-04-10 | fix: audit complet cohérence des noms de champs création/affichage     |
+| `bc389fc`  | 2026-04-10 | fix: corriger affichage ennemis, tracker et navigation écran MJ        |
+| `fdd28c2`  | 2026-04-04 | feat: initialisation complete du projet Le Compagnon du MJ             |
+| `fbed0b4`  | 2026-04-04 | feat: update dependencies and add logging                              |
+| `d6a1f7f`  | 2026-03-27 | feat: initialisation complète du projet Le Compagnon du MJ             |
+
+---
+
+*Document généré le 2026-04-29.*

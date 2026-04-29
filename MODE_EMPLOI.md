@@ -325,4 +325,3 @@ cd backend && NODE_ENV=production npm start
 ---
 
 *Que vos dés soient favorables ! 🎲*
-           
