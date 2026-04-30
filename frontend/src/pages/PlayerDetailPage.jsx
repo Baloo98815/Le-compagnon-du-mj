@@ -55,7 +55,7 @@ const pageStyles = {
     display: 'block',
     marginTop: '10px',
     fontSize: '12px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
   },
   charInfoCard: {
     padding: '15px',
@@ -163,7 +163,7 @@ const pageStyles = {
   equipmentName: {
     flex: 1,
     fontSize: '13px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
   },
   formGroup: {
     marginBottom: '15px',
@@ -194,7 +194,7 @@ const pageStyles = {
     textAlign: 'center',
     padding: '40px',
     fontSize: '18px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
   },
   saveButton: {
     marginTop: '20px',

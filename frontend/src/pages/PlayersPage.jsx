@@ -63,7 +63,7 @@ const pageStyles = {
   },
   playerStats: {
     fontSize: '13px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     marginBottom: '4px',
     lineHeight: '1.6',
   },
@@ -87,7 +87,7 @@ const pageStyles = {
   },
   emptyStateText: {
     fontSize: '16px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     marginBottom: '30px',
   },
   formGroup: {
@@ -97,7 +97,7 @@ const pageStyles = {
     textAlign: 'center',
     padding: '40px',
     fontSize: '18px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
   },
 };
 

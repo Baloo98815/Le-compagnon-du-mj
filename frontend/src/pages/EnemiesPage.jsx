@@ -110,6 +110,7 @@ export default function EnemiesPage() {
   const enemyCardStyle = {
     cursor: 'pointer',
     transition: 'transform 0.2s, box-shadow 0.2s',
+    position: 'relative',
   };
 
   const enemyCardHoverStyle = {
@@ -136,7 +137,7 @@ export default function EnemiesPage() {
 
   const cardStatsStyle = {
     fontSize: '0.9rem',
-    color: '#666',
+    color: 'var(--color-text-muted)',
     lineHeight: '1.4',
   };
 
@@ -149,12 +150,12 @@ export default function EnemiesPage() {
     textAlign: 'center',
     padding: '2rem',
     fontSize: '1.1rem',
-    color: '#666',
+    color: 'var(--color-text-muted)',
   };
 
   const errorStyle = {
-    backgroundColor: '#ffebee',
-    color: '#c62828',
+    backgroundColor: 'rgba(155,32,32,0.15)',
+    color: 'var(--color-blood-light)',
     padding: '1rem',
     borderRadius: '4px',
     marginBottom: '1rem',
@@ -191,6 +192,33 @@ export default function EnemiesPage() {
               onMouseLeave={(e) => Object.assign(e.currentTarget.style, {})}
               data-testid={`enemy-card-${enemy.id}`}
             >
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteConfirm({ open: true, id: enemy.id });
+                }}
+                data-testid={`delete-enemy-btn-${enemy.id}`}
+                title="Supprimer cet ennemi"
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--color-text-subtle)',
+                  padding: '2px 4px',
+                  borderRadius: '4px',
+                  lineHeight: 1,
+                  fontSize: '15px',
+                  transition: 'color 0.15s',
+                  zIndex: 1,
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--color-blood)'}
+                onMouseLeave={e => e.currentTarget.style.color = '#bbb'}
+              >
+                🗑
+              </button>
               <div style={cardContentStyle}>
                 <TokenAvatar name={enemy.name} image={enemy.token_image} size="lg" />
                 <div style={cardInfoStyle}>
@@ -201,21 +229,6 @@ export default function EnemiesPage() {
                     <div>CA: {enemy.armor_class ?? '—'}</div>
                     <div>HP: {enemy.max_hp ?? '—'}</div>
                   </div>
-                </div>
-                <div
-                  style={cardActionsStyle}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() =>
-                      setDeleteConfirm({ open: true, id: enemy.id })
-                    }
-                    data-testid={`delete-enemy-btn-${enemy.id}`}
-                  >
-                    Supprimer
-                  </Button>
                 </div>
               </div>
             </Card>
@@ -262,7 +275,7 @@ export default function EnemiesPage() {
                   width: '100%',
                   padding: '0.5rem',
                   borderRadius: '4px',
-                  border: '1px solid #ccc',
+                  border: '1px solid var(--color-border)',
                   fontFamily: 'Georgia, serif',
                 }}
               >
@@ -287,7 +300,7 @@ export default function EnemiesPage() {
                   width: '100%',
                   padding: '0.5rem',
                   borderRadius: '4px',
-                  border: '1px solid #ccc',
+                  border: '1px solid var(--color-border)',
                   fontFamily: 'Georgia, serif',
                 }}
               >

@@ -109,6 +109,7 @@ function initDatabase() {
       legendary_actions TEXT DEFAULT '[]',
       damage_resistances TEXT DEFAULT '[]',
       damage_immunities TEXT DEFAULT '[]',
+      damage_vulnerabilities TEXT DEFAULT '[]',
       condition_immunities TEXT DEFAULT '[]',
       senses TEXT DEFAULT '{}',
       languages TEXT,
@@ -253,6 +254,11 @@ function initDatabase() {
         UPDATE npcs SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
       END;
   `);
+
+  // Migration : ajouter damage_vulnerabilities si absent
+  try {
+    database.exec("ALTER TABLE enemies ADD COLUMN damage_vulnerabilities TEXT DEFAULT '[]'");
+  } catch (e) { /* deja presente */ }
 
   // Migration : ajouter npc_id a scene_npcs si la colonne n existe pas encore
   try {

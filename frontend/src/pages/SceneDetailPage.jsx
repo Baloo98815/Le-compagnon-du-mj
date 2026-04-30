@@ -177,8 +177,8 @@ export default function SceneDetailPage() {
   };
 
   const sceneInfoStyle = {
-    backgroundColor: 'white',
-    border: '1px solid var(--color-leather)',
+    backgroundColor: 'var(--color-surface)',
+    border: '1px solid var(--color-border-light)',
     borderRadius: '4px',
     padding: '1rem',
     marginBottom: '1.5rem',
@@ -210,23 +210,23 @@ export default function SceneDetailPage() {
   const nonCombatBadgeStyle = {
     ...badgeStyle,
     backgroundColor: 'var(--color-gold)',
-    color: '#333',
+    color: 'var(--color-text)',
   };
 
   const sectionItemStyle = {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'var(--color-surface-2)',
     padding: '1rem',
     borderRadius: '4px',
     marginBottom: '0.5rem',
-    border: '1px solid #ddd',
+    border: '1px solid var(--color-border)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
   };
 
   const errorStyle = {
-    backgroundColor: '#ffebee',
-    color: '#c62828',
+    backgroundColor: 'rgba(155,32,32,0.15)',
+    color: 'var(--color-blood-light)',
     padding: '1rem',
     borderRadius: '4px',
     marginBottom: '1rem',
@@ -322,7 +322,7 @@ export default function SceneDetailPage() {
               <div>
                 <strong>{location.name}</strong>
                 {location.map_url && (
-                  <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
                     <a
                       href={location.map_url}
                       target="_blank"
@@ -347,7 +347,7 @@ export default function SceneDetailPage() {
             </div>
           ))
         ) : (
-          <div style={{ padding: '1rem', color: '#999' }}>
+          <div style={{ padding: '1rem', color: 'var(--color-text-muted)' }}>
             Aucun lieu pour le moment
           </div>
         )}
@@ -373,12 +373,12 @@ export default function SceneDetailPage() {
                 <TokenAvatar name={npc.name} size="md" />
                 <div>
                   <strong>{npc.name}</strong>
-                  {npc.role && <div style={{ fontSize: '0.9rem', color: '#666' }}>{npc.role}</div>}
-                  <div style={{ fontSize: '0.85rem', color: '#666' }}>
+                  {npc.role && <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>{npc.role}</div>}
+                  <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                     CA {npc.armor_class} • HP {npc.current_hp}/{npc.max_hp}
                   </div>
                   {npc.notes && (
-                    <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
                       {npc.notes}
                     </div>
                   )}
@@ -397,7 +397,7 @@ export default function SceneDetailPage() {
             </div>
           ))
         ) : (
-          <div style={{ padding: '1rem', color: '#999' }}>
+          <div style={{ padding: '1rem', color: 'var(--color-text-muted)' }}>
             Aucun PNJ pour le moment
           </div>
         )}
@@ -424,7 +424,7 @@ export default function SceneDetailPage() {
                   <TokenAvatar name={sceneEnemy.enemy_name} image={sceneEnemy.enemy_token} size="md" />
                   <div>
                     <strong>{sceneEnemy.enemy_name}</strong>
-                    <div style={{ fontSize: '0.85rem', color: '#666' }}>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                       {sceneEnemy.enemy_cr ? `CR ${sceneEnemy.enemy_cr} • ` : ''}CA {sceneEnemy.armor_class} • HP {sceneEnemy.max_hp}
                     </div>
                   </div>
@@ -443,7 +443,7 @@ export default function SceneDetailPage() {
             );
           })
         ) : (
-          <div style={{ padding: '1rem', color: '#999' }}>
+          <div style={{ padding: '1rem', color: 'var(--color-text-muted)' }}>
             Aucun ennemi pour le moment
           </div>
         )}
@@ -523,7 +523,7 @@ export default function SceneDetailPage() {
               <div style={{
                 maxHeight: '200px',
                 overflowY: 'auto',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 borderRadius: '4px',
               }}>
                 {allNpcs
@@ -538,13 +538,13 @@ export default function SceneDetailPage() {
                       style={{
                         padding: '0.6rem 0.75rem',
                         cursor: 'pointer',
-                        backgroundColor: selectedNpcId === String(npc.id) ? 'var(--color-gold)' : 'white',
-                        borderBottom: '1px solid #eee',
+                        backgroundColor: selectedNpcId === String(npc.id) ? 'var(--color-gold)' : 'var(--color-surface-2)',
+                        borderBottom: '1px solid var(--color-border)',
                         transition: 'background 0.15s',
                       }}
                     >
                       <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>{npc.name}</div>
-                      <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
                         {[npc.gender, npc.species].filter(Boolean).join(' · ')}
                         {npc.character_traits ? ` — ${npc.character_traits}` : ''}
                       </div>
@@ -560,7 +560,7 @@ export default function SceneDetailPage() {
                   flexDirection: 'column',
                   gap: '0.5rem',
                 }}>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#666' }}>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                     Surcharge optionnelle (laissez vide pour utiliser les valeurs du PNJ) :
                   </p>
                   <Input
@@ -629,9 +629,11 @@ export default function SceneDetailPage() {
               style={{
                 width: '100%',
                 padding: '0.5rem',
-                borderRadius: '4px',
-                border: '1px solid #ccc',
+                borderRadius: '5px',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
+                backgroundColor: 'var(--color-surface-2)',
+                color: 'var(--color-text)',
               }}
             >
               <option value="">-- Sélectionner un ennemi --</option>

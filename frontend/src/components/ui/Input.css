@@ -1,58 +1,60 @@
 .input-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .input-label {
-  margin-bottom: 8px;
-  color: var(--color-leather);
+  margin-bottom: 6px;
+  color: var(--color-text-muted);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  font-family: 'Cinzel', serif;
 }
 
 .input-field {
-  padding: 12px 16px;
-  background: var(--color-parchment-dark);
-  border: 2px solid var(--color-gold-light);
-  border-radius: 4px;
-  color: var(--color-leather);
-  font-family: inherit;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  padding: 10px 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  color: var(--color-text);
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 15px;
+  transition: all 0.2s ease;
 }
 
 .input-field:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 0 3px rgba(212,160,23,0.12);
+  background: var(--color-surface-hover);
 }
 
 .input-field::placeholder {
-  color: var(--color-leather);
-  opacity: 0.5;
+  color: var(--color-text-subtle);
+  opacity: 1;
 }
 
 .input-field.input-error {
-  border-color: var(--color-blood);
+  border-color: var(--color-blood-light);
+  background: rgba(155,32,32,0.08);
 }
 
 .input-field.input-error:focus {
-  box-shadow: 0 0 8px rgba(139, 0, 0, 0.3);
+  box-shadow: 0 0 0 3px rgba(155,32,32,0.15);
 }
 
 .input-error-text {
-  margin: 6px 0 0 0;
-  color: var(--color-blood);
+  margin: 5px 0 0 0;
+  color: var(--color-blood-light);
   font-size: 12px;
 }
 
 .input-help-text {
-  margin: 6px 0 0 0;
-  color: var(--color-leather);
-  opacity: 0.7;
+  margin: 5px 0 0 0;
+  color: var(--color-text-subtle);
   font-size: 12px;
   font-style: italic;
 }

@@ -23,13 +23,36 @@ router.get('/:id', asyncHandler((req, res) => {
   const locations = db.prepare('SELECT * FROM scene_locations WHERE scene_id = ?').all(req.params.id);
   const npcs = db.prepare('SELECT * FROM scene_npcs WHERE scene_id = ?').all(req.params.id);
   const enemyInstances = db.prepare(`
-    SELECT sei.*, e.name as enemy_name, e.token_image as enemy_token,
+    SELECT sei.*,
+           e.name as enemy_name, e.token_image as enemy_token,
            e.armor_class as enemy_ac, e.max_hp as enemy_max_hp,
-           e.challenge_rating as enemy_cr
+           e.challenge_rating as enemy_cr,
+           e.abilities as enemy_abilities,
+           e.actions as enemy_actions,
+           e.reactions as enemy_reactions,
+           e.legendary_actions as enemy_legendary_actions,
+           e.damage_resistances as enemy_resistances,
+           e.damage_immunities as enemy_immunities,
+           e.condition_immunities as enemy_condition_immunities,
+           e.damage_vulnerabilities as enemy_vulnerabilities,
+           e.senses as enemy_senses,
+           e.notes as enemy_notes
     FROM scene_enemy_instances sei
     JOIN enemies e ON e.id = sei.enemy_id
     WHERE sei.scene_id = ?
-  `).all(req.params.id).map(inst => ({ ...inst, conditions: JSON.parse(inst.conditions || '[]') }));
+  `).all(req.params.id).map(inst => ({
+    ...inst,
+    conditions: JSON.parse(inst.conditions || '[]'),
+    enemy_abilities: JSON.parse(inst.enemy_abilities || '[]'),
+    enemy_actions: JSON.parse(inst.enemy_actions || '[]'),
+    enemy_reactions: JSON.parse(inst.enemy_reactions || '[]'),
+    enemy_legendary_actions: JSON.parse(inst.enemy_legendary_actions || '[]'),
+    enemy_resistances: JSON.parse(inst.enemy_resistances || '[]'),
+    enemy_immunities: JSON.parse(inst.enemy_immunities || '[]'),
+    enemy_condition_immunities: JSON.parse(inst.enemy_condition_immunities || '[]'),
+    enemy_vulnerabilities: JSON.parse(inst.enemy_vulnerabilities || '[]'),
+    enemy_senses: (() => { try { return JSON.parse(inst.enemy_senses || '{}'); } catch { return inst.enemy_senses || null; } })(),
+  }));
   res.json({ success: true, data: { ...scene, locations, npcs, enemy_instances: enemyInstances } });
 }));
 

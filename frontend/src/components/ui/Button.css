@@ -17,8 +17,8 @@
 /* Variantes */
 .btn-primary {
   background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
-  color: var(--color-leather);
-  border-bottom: 3px solid var(--color-leather);
+  color: #1a1200;
+  border-bottom: 3px solid #7a5500;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -28,8 +28,8 @@
 
 .btn-danger {
   background: linear-gradient(135deg, var(--color-blood), var(--color-blood-light));
-  color: var(--color-parchment);
-  border-bottom: 3px solid var(--color-blood);
+  color: #ffffff;
+  border-bottom: 3px solid #6a0000;
 }
 
 .btn-danger:hover:not(:disabled) {
@@ -38,9 +38,9 @@
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, var(--color-stone), var(--color-stone-light));
-  color: var(--color-parchment);
-  border-bottom: 3px solid var(--color-stone);
+  background: linear-gradient(135deg, #3a4a62, #4a5e7a);
+  color: #e8d5a0;
+  border-bottom: 3px solid #2a3550;
 }
 
 .btn-secondary:hover:not(:disabled) {

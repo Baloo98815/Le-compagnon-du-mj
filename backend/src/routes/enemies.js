@@ -30,7 +30,7 @@ const upload = multer({
 });
 
 // Champs stockés en JSON dans la DB (tableaux d'objets)
-const JSON_FIELDS = ['abilities', 'actions', 'reactions', 'legendary_actions', 'damage_resistances', 'damage_immunities', 'condition_immunities'];
+const JSON_FIELDS = ['abilities', 'actions', 'reactions', 'legendary_actions', 'damage_vulnerabilities', 'damage_resistances', 'damage_immunities', 'condition_immunities'];
 
 // senses et speed sont des champs texte libre (pas JSON)
 function parseEnemy(enemy) {
@@ -150,7 +150,7 @@ const ENEMY_FIELDS = [
   'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma',
   'armor_class', 'max_hp', 'speed', 'challenge_rating',
   'abilities', 'actions', 'reactions', 'legendary_actions',
-  'damage_resistances', 'damage_immunities', 'condition_immunities',
+  'damage_vulnerabilities', 'damage_resistances', 'damage_immunities', 'condition_immunities',
   'senses', 'languages', 'notes'
 ];
 

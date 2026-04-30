@@ -170,8 +170,8 @@ export default function EnemyDetailPage() {
   };
 
   const infoBoxStyle = {
-    backgroundColor: 'white',
-    border: '1px solid var(--color-leather)',
+    backgroundColor: 'var(--color-surface)',
+    border: '1px solid var(--color-border-light)',
     borderRadius: '4px',
     padding: '1rem',
     marginBottom: '1.5rem',
@@ -200,11 +200,11 @@ export default function EnemyDetailPage() {
   };
 
   const capabilityItemStyle = {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'var(--color-surface-2)',
     padding: '1rem',
     borderRadius: '4px',
     marginBottom: '0.5rem',
-    border: '1px solid #ddd',
+    border: '1px solid var(--color-border)',
   };
 
   const tagContainerStyle = {
@@ -226,8 +226,8 @@ export default function EnemyDetailPage() {
   };
 
   const errorStyle = {
-    backgroundColor: '#ffebee',
-    color: '#c62828',
+    backgroundColor: 'rgba(155,32,32,0.15)',
+    color: 'var(--color-blood-light)',
     padding: '1rem',
     borderRadius: '4px',
     marginBottom: '1rem',
@@ -298,7 +298,7 @@ export default function EnemyDetailPage() {
             }}
           />
           {tokenFile && (
-            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
               Fichier sélectionné: {tokenFile.name}
             </div>
           )}
@@ -336,7 +336,7 @@ export default function EnemyDetailPage() {
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
               }}
             >
@@ -360,7 +360,7 @@ export default function EnemyDetailPage() {
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
               }}
@@ -398,7 +398,7 @@ export default function EnemyDetailPage() {
                   padding: '0.25rem',
                   marginTop: '0.5rem',
                   borderRadius: '4px',
-                  border: '1px solid #ccc',
+                  border: '1px solid var(--color-border)',
                   textAlign: 'center',
                   fontFamily: 'Georgia, serif',
                   boxSizing: 'border-box',
@@ -439,7 +439,7 @@ export default function EnemyDetailPage() {
       <div style={infoBoxStyle}>
         <h2 style={sectionTitleStyle}>Capacités</h2>
 
-        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Actions
         </h3>
         {(enemy.actions || []).map((action, idx) => (
@@ -456,7 +456,7 @@ export default function EnemyDetailPage() {
                 padding: '0.5rem',
                 marginBottom: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
               }}
@@ -471,7 +471,7 @@ export default function EnemyDetailPage() {
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
                 minHeight: '60px',
@@ -496,7 +496,7 @@ export default function EnemyDetailPage() {
           + Ajouter une action
         </Button>
 
-        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Réactions
         </h3>
         {(enemy.reactions || []).map((reaction, idx) => (
@@ -513,7 +513,7 @@ export default function EnemyDetailPage() {
                 padding: '0.5rem',
                 marginBottom: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
               }}
@@ -528,7 +528,7 @@ export default function EnemyDetailPage() {
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
                 minHeight: '60px',
@@ -553,7 +553,7 @@ export default function EnemyDetailPage() {
           + Ajouter une réaction
         </Button>
 
-        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Actions légendaires
         </h3>
         {(enemy.legendary_actions || []).map((action, idx) => (
@@ -570,7 +570,7 @@ export default function EnemyDetailPage() {
                 padding: '0.5rem',
                 marginBottom: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
               }}
@@ -585,7 +585,7 @@ export default function EnemyDetailPage() {
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
                 minHeight: '60px',
@@ -610,7 +610,7 @@ export default function EnemyDetailPage() {
           + Ajouter une action légendaire
         </Button>
 
-        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Capacités spéciales
         </h3>
         {(enemy.abilities || []).map((ability, idx) => (
@@ -627,7 +627,7 @@ export default function EnemyDetailPage() {
                 padding: '0.5rem',
                 marginBottom: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
               }}
@@ -642,7 +642,7 @@ export default function EnemyDetailPage() {
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
+                border: '1px solid var(--color-border)',
                 fontFamily: 'Georgia, serif',
                 boxSizing: 'border-box',
                 minHeight: '60px',
@@ -669,9 +669,41 @@ export default function EnemyDetailPage() {
       </div>
 
       <div style={infoBoxStyle}>
-        <h2 style={sectionTitleStyle}>Résistances</h2>
+        <h2 style={sectionTitleStyle}>Résistances, Vulnérabilités & Immunités</h2>
 
-        <h3 style={{ marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginBottom: '0.5rem', color: '#e8a040' }}>
+          Vulnérabilités aux dégâts
+        </h3>
+        <div style={tagContainerStyle}>
+          {(enemy.damage_vulnerabilities || []).map((vuln) => (
+            <div key={vuln} style={{ ...tagStyle, backgroundColor: '#7a3000' }}>
+              {vuln}
+              <button
+                onClick={() => removeTag('damage_vulnerabilities', vuln)}
+                style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '1rem', padding: 0 }}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <input
+            id="new-damage-vulnerability"
+            type="text"
+            placeholder="Ajouter une vulnérabilité"
+            style={{ flex: 1, padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--color-border)', fontFamily: 'Georgia, serif', boxSizing: 'border-box' }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') { addTag('damage_vulnerabilities', e.target.value); e.target.value = ''; }
+            }}
+          />
+          <Button size="sm" variant="secondary" onClick={() => {
+            const input = document.getElementById('new-damage-vulnerability');
+            addTag('damage_vulnerabilities', input.value); input.value = '';
+          }}>Ajouter</Button>
+        </div>
+
+        <h3 style={{ marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Résistances aux dégâts
         </h3>
         <div style={tagContainerStyle}>
@@ -703,7 +735,7 @@ export default function EnemyDetailPage() {
               flex: 1,
               padding: '0.5rem',
               borderRadius: '4px',
-              border: '1px solid #ccc',
+              border: '1px solid var(--color-border)',
               fontFamily: 'Georgia, serif',
               boxSizing: 'border-box',
             }}
@@ -727,7 +759,7 @@ export default function EnemyDetailPage() {
           </Button>
         </div>
 
-        <h3 style={{ marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Immunités aux dégâts
         </h3>
         <div style={tagContainerStyle}>
@@ -759,7 +791,7 @@ export default function EnemyDetailPage() {
               flex: 1,
               padding: '0.5rem',
               borderRadius: '4px',
-              border: '1px solid #ccc',
+              border: '1px solid var(--color-border)',
               fontFamily: 'Georgia, serif',
               boxSizing: 'border-box',
             }}
@@ -783,7 +815,7 @@ export default function EnemyDetailPage() {
           </Button>
         </div>
 
-        <h3 style={{ marginBottom: '0.5rem', color: '#444' }}>
+        <h3 style={{ marginBottom: '0.5rem', color: 'var(--color-text)' }}>
           Immunités aux états
         </h3>
         <div style={tagContainerStyle}>
@@ -815,7 +847,7 @@ export default function EnemyDetailPage() {
               flex: 1,
               padding: '0.5rem',
               borderRadius: '4px',
-              border: '1px solid #ccc',
+              border: '1px solid var(--color-border)',
               fontFamily: 'Georgia, serif',
               boxSizing: 'border-box',
             }}
@@ -869,7 +901,7 @@ export default function EnemyDetailPage() {
             width: '100%',
             padding: '1rem',
             borderRadius: '4px',
-            border: '1px solid #ccc',
+            border: '1px solid var(--color-border)',
             fontFamily: 'Georgia, serif',
             boxSizing: 'border-box',
             minHeight: '100px',

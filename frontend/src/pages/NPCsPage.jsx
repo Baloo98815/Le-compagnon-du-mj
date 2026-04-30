@@ -40,6 +40,7 @@ const SPECIES_LIST = [
   'Aarakocra',
   'Changelin',
   'Shifter',
+  'Kargyraa',
 ];
 
 const GENDERS = ['Masculin', 'Féminin', 'Non-binaire', 'Inconnu'];
@@ -119,10 +120,10 @@ function NpcForm({ value, onChange }) {
     width: '100%',
     padding: '0.5rem',
     borderRadius: '4px',
-    border: '1px solid #ccc',
+    border: '1px solid var(--color-border)',
     fontFamily: 'Georgia, serif',
     fontSize: '1rem',
-    backgroundColor: 'white',
+    backgroundColor: 'var(--color-surface)',
   };
 
   return (
@@ -320,8 +321,8 @@ export default function NPCsPage() {
     margin: 0,
   };
   const errorStyle = {
-    backgroundColor: '#ffebee',
-    color: '#c62828',
+    backgroundColor: 'rgba(155,32,32,0.15)',
+    color: 'var(--color-blood-light)',
     padding: '1rem',
     borderRadius: '4px',
     marginBottom: '1rem',
@@ -349,7 +350,7 @@ export default function NPCsPage() {
     gap: '0.5rem',
     flexWrap: 'wrap',
     fontSize: '0.8rem',
-    color: '#555',
+    color: 'var(--color-text-muted)',
     marginTop: '0.5rem',
   };
 
@@ -380,9 +381,9 @@ export default function NPCsPage() {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#888' }}>Chargement…</div>
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-muted)' }}>Chargement…</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#888' }}>
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-muted)' }}>
             {npcs.length === 0
               ? 'Aucun PNJ dans la bibliothèque. Créez-en un ou générez-en un aléatoirement !'
               : 'Aucun PNJ ne correspond à votre recherche.'}
@@ -398,14 +399,14 @@ export default function NPCsPage() {
                       <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--color-blood)' }}>
                         {npc.name}
                       </div>
-                      <div style={{ fontSize: '0.85rem', color: '#666' }}>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                         {[npc.gender, npc.species].filter(Boolean).join(' · ')}
                       </div>
                     </div>
                   </div>
 
                   {npc.character_traits && (
-                    <p style={{ fontSize: '0.9rem', color: '#444', fontStyle: 'italic', margin: '0 0 0.75rem 0' }}>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--color-text)', fontStyle: 'italic', margin: '0 0 0.75rem 0' }}>
                       « {npc.character_traits} »
                     </p>
                   )}
@@ -419,7 +420,7 @@ export default function NPCsPage() {
                   </div>
 
                   {npc.notes && (
-                    <p style={{ fontSize: '0.8rem', color: '#777', marginTop: '0.5rem', marginBottom: 0 }}>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '0.5rem', marginBottom: 0 }}>
                       {npc.notes}
                     </p>
                   )}
@@ -455,7 +456,7 @@ export default function NPCsPage() {
               <div style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                borderBottom: '1px solid #eee',
+                borderBottom: '1px solid var(--color-border)',
                 paddingBottom: '0.75rem',
               }}>
                 <Button
@@ -470,7 +471,7 @@ export default function NPCsPage() {
 
             <NpcForm value={formData} onChange={setFormData} />
 
-            {error && <div style={{ color: '#c62828', fontSize: '0.9rem' }}>{error}</div>}
+            {error && <div style={{ color: 'var(--color-blood-light)', fontSize: '0.9rem' }}>{error}</div>}
 
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', paddingTop: '0.5rem' }}>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
@@ -492,6 +493,6 @@ export default function NPCsPage() {
           danger
         />
       </div>
-    </Layout>
+       </Layout>
   );
 }

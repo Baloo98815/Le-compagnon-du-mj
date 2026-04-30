@@ -52,7 +52,7 @@ const pageStyles = {
     borderRadius: '4px',
     fontFamily: 'inherit',
     fontSize: '14px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     resize: 'vertical',
   },
   playersGrid: {
@@ -66,12 +66,13 @@ const pageStyles = {
     border: '1px solid var(--color-gold-light)',
     borderRadius: '4px',
     backgroundColor: 'var(--color-parchment)',
+    position: 'relative',
   },
   playerHeader: {
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
-    marginBottom: '12px',
+    marginBottom: '4px',
   },
   playerInfo: {
     flex: 1,
@@ -84,7 +85,7 @@ const pageStyles = {
   },
   playerStats: {
     fontSize: '12px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     margin: '4px 0 0 0',
   },
   scenesGrid: {
@@ -113,7 +114,7 @@ const pageStyles = {
   },
   sceneMeta: {
     fontSize: '12px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     marginBottom: '8px',
   },
   sceneType: {
@@ -149,12 +150,12 @@ const pageStyles = {
     textAlign: 'center',
     padding: '40px',
     fontSize: '18px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
   },
   emptyMessage: {
     padding: '20px',
     textAlign: 'center',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     fontStyle: 'italic',
   },
 };
@@ -353,7 +354,7 @@ export default function CampaignDetailPage() {
 
         {campaign.description && (
           <Card style={{ marginBottom: '20px' }}>
-            <p style={{ margin: 0, color: 'var(--color-stone)' }}>
+            <p style={{ margin: 0, color: 'var(--color-text-muted)' }}>
               {campaign.description}
             </p>
           </Card>
@@ -410,6 +411,32 @@ export default function CampaignDetailPage() {
             <div style={pageStyles.playersGrid}>
               {players.map((player) => (
                 <div key={player.id} style={pageStyles.playerCard}>
+                  <button
+                    onClick={() => {
+                      setPlayerToDelete(player);
+                      setShowDeletePlayerConfirm(true);
+                    }}
+                    data-testid={`remove-player-btn-${player.id}`}
+                    title="Retirer ce personnage"
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--color-text-subtle)',
+                      padding: '2px 4px',
+                      borderRadius: '4px',
+                      lineHeight: 1,
+                      fontSize: '15px',
+                      transition: 'color 0.15s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--color-blood)'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#bbb'}
+                  >
+                    🗑
+                  </button>
                   <div style={pageStyles.playerHeader}>
                     <TokenAvatar
                       image={player.token_image}
@@ -426,18 +453,6 @@ export default function CampaignDetailPage() {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => {
-                      setPlayerToDelete(player);
-                      setShowDeletePlayerConfirm(true);
-                    }}
-                    data-testid={`remove-player-btn-${player.id}`}
-                    style={{ width: '100%' }}
-                  >
-                    Retirer
-                  </Button>
                 </div>
               ))}
             </div>
@@ -491,7 +506,7 @@ export default function CampaignDetailPage() {
                     <p
                       style={{
                         fontSize: '13px',
-                        color: 'var(--color-stone)',
+                        color: 'var(--color-text-muted)',
                         margin: '8px 0',
                         lineHeight: '1.4',
                       }}
@@ -559,10 +574,12 @@ export default function CampaignDetailPage() {
             style={{
               width: '100%',
               padding: '8px',
-              border: '1px solid var(--color-gold)',
-              borderRadius: '4px',
+              border: '1px solid var(--color-border)',
+              borderRadius: '5px',
               fontFamily: 'inherit',
               fontSize: '14px',
+              backgroundColor: 'var(--color-surface-2)',
+              color: 'var(--color-text)',
             }}
           >
             <option value="">-- Sélectionnez un personnage --</option>
@@ -632,10 +649,12 @@ export default function CampaignDetailPage() {
             style={{
               width: '100%',
               padding: '8px',
-              border: '1px solid var(--color-gold)',
-              borderRadius: '4px',
+              border: '1px solid var(--color-border)',
+              borderRadius: '5px',
               fontFamily: 'inherit',
               fontSize: '14px',
+              backgroundColor: 'var(--color-surface-2)',
+              color: 'var(--color-text)',
             }}
           >
             <option value="roleplay">🎭 Roleplay</option>
@@ -666,11 +685,13 @@ export default function CampaignDetailPage() {
               width: '100%',
               minHeight: '80px',
               padding: '8px',
-              border: '1px solid var(--color-gold)',
-              borderRadius: '4px',
+              border: '1px solid var(--color-border)',
+              borderRadius: '5px',
               fontFamily: 'inherit',
               fontSize: '14px',
-              color: 'var(--color-stone)',
+              backgroundColor: 'var(--color-surface-2)',
+              color: 'var(--color-text)',
+              color: 'var(--color-text-muted)',
               resize: 'vertical',
             }}
           />

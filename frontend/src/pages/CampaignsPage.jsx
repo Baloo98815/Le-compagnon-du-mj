@@ -54,7 +54,7 @@ const pageStyles = {
   },
   campaignDesc: {
     fontSize: '14px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     marginBottom: '8px',
     lineHeight: '1.4',
   },
@@ -83,7 +83,7 @@ const pageStyles = {
   },
   emptyStateText: {
     fontSize: '16px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
     marginBottom: '30px',
   },
   formGroup: {
@@ -93,7 +93,7 @@ const pageStyles = {
     textAlign: 'center',
     padding: '40px',
     fontSize: '18px',
-    color: 'var(--color-stone)',
+    color: 'var(--color-text-muted)',
   },
 };
 
@@ -317,7 +317,7 @@ export default function CampaignsPage() {
                 borderRadius: '4px',
                 fontFamily: 'inherit',
                 fontSize: '14px',
-                color: 'var(--color-stone)',
+                color: 'var(--color-text-muted)',
               }}
             />
           </div>
