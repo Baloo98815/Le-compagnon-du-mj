@@ -64,6 +64,16 @@ export default function Navbar() {
           </li>
           <li>
             <NavLink
+              to="/npcs"
+              className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+              onClick={closeMenu}
+              data-testid="nav-npcs"
+            >
+              PNJ
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/dm"
               className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
               onClick={closeMenu}

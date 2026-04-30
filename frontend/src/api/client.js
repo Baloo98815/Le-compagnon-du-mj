@@ -70,6 +70,15 @@ export const enemiesAPI = {
   },
 };
 
+// ----- PNJ (bibliothèque globale) -----
+export const npcsAPI = {
+  getAll: () => api.get('/npcs'),
+  getById: (id) => api.get(`/npcs/${id}`),
+  create: (data) => api.post('/npcs', data),
+  update: (id, data) => api.put(`/npcs/${id}`, data),
+  delete: (id) => api.delete(`/npcs/${id}`),
+};
+
 // ----- SCÈNES -----
 export const scenesAPI = {
   getAll: (campaignId) => api.get('/scenes', { params: { campaign_id: campaignId } }),

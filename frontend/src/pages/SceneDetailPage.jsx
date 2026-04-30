@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { scenesAPI, enemiesAPI } from '../api/client';
+import { scenesAPI, enemiesAPI, npcsAPI } from '../api/client';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
@@ -14,14 +14,18 @@ export default function SceneDetailPage() {
   const navigate = useNavigate();
   const [scene, setScene] = useState(null);
   const [allEnemies, setAllEnemies] = useState([]);
+  const [allNpcs, setAllNpcs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [showAddLocationModal, setShowAddLocationModal] = useState(false);
   const [newLocation, setNewLocation] = useState({ name: '', map_url: '' });
 
+  // NPC picker : sélection depuis la bibliothèque + surcharge optionnelle
   const [showAddNpcModal, setShowAddNpcModal] = useState(false);
-  const [newNpc, setNewNpc] = useState({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
+  const [selectedNpcId, setSelectedNpcId] = useState('');
+  const [npcOverride, setNpcOverride] = useState({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
+  const [npcSearchFilter, setNpcSearchFilter] = useState('');
 
   const [showAddEnemyModal, setShowAddEnemyModal] = useState(false);
   const [selectedEnemyId, setSelectedEnemyId] = useState('');
@@ -36,12 +40,14 @@ export default function SceneDetailPage() {
   const fetchSceneAndEnemies = async () => {
     try {
       setLoading(true);
-      const [sceneData, enemiesData] = await Promise.all([
+      const [sceneData, enemiesData, npcsData] = await Promise.all([
         scenesAPI.getById(sceneId),
         enemiesAPI.getAll(),
+        npcsAPI.getAll(),
       ]);
       setScene(sceneData);
       setAllEnemies(enemiesData || []);
+      setAllNpcs(npcsData || []);
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -76,14 +82,22 @@ export default function SceneDetailPage() {
   };
 
   const handleAddNpc = async () => {
-    if (!newNpc.name.trim()) {
-      setError('Le nom du PNJ est obligatoire');
+    if (!selectedNpcId) {
+      setError('Veuillez sélectionner un PNJ');
       return;
     }
     try {
-      await scenesAPI.addNpc(sceneId, newNpc);
+      const payload = {
+        npc_id: parseInt(selectedNpcId),
+        ...(npcOverride.name?.trim() ? { name: npcOverride.name } : {}),
+        ...(npcOverride.role?.trim() ? { role: npcOverride.role } : {}),
+      };
+      await scenesAPI.addNpc(sceneId, payload);
       setShowAddNpcModal(false);
-      setNewNpc({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
+      setSelectedNpcId('');
+      setNpcOverride({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
+      setNpcSearchFilter('');
+      setError(null);
       fetchSceneAndEnemies();
     } catch (err) {
       setError(err.message);
@@ -361,7 +375,7 @@ export default function SceneDetailPage() {
                   <strong>{npc.name}</strong>
                   {npc.role && <div style={{ fontSize: '0.9rem', color: '#666' }}>{npc.role}</div>}
                   <div style={{ fontSize: '0.85rem', color: '#666' }}>
-                    CA {npc.ca} • HP {npc.hp}
+                    CA {npc.armor_class} • HP {npc.current_hp}/{npc.max_hp}
                   </div>
                   {npc.notes && (
                     <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
@@ -479,70 +493,115 @@ export default function SceneDetailPage() {
 
       <Modal
         isOpen={showAddNpcModal}
-        onClose={() => setShowAddNpcModal(false)}
-        title="Ajouter un PNJ"
+        onClose={() => {
+          setShowAddNpcModal(false);
+          setSelectedNpcId('');
+          setNpcSearchFilter('');
+          setNpcOverride({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
+        }}
+        title="Attacher un PNJ à la scène"
         size="md"
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Input
-            label="Nom"
-            id="npc-name"
-            placeholder="Ex: Talendil"
-            value={newNpc.name}
-            onChange={(e) =>
-              setNewNpc({ ...newNpc, name: e.target.value })
-            }
-          />
-          <Input
-            label="Rôle"
-            id="npc-role"
-            placeholder="Ex: Aubergiste"
-            value={newNpc.role}
-            onChange={(e) =>
-              setNewNpc({ ...newNpc, role: e.target.value })
-            }
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <Input
-              label="CA"
-              id="npc-armor-class"
-              type="number"
-              value={newNpc.armor_class}
-              onChange={(e) =>
-                setNewNpc({ ...newNpc, armor_class: parseInt(e.target.value) })
-              }
-            />
-            <Input
-              label="HP max"
-              id="npc-max-hp"
-              type="number"
-              value={newNpc.max_hp}
-              onChange={(e) =>
-                setNewNpc({ ...newNpc, max_hp: parseInt(e.target.value) })
-              }
-            />
-          </div>
-          <Input
-            label="Notes"
-            id="npc-notes"
-            placeholder="Notes du MJ..."
-            value={newNpc.notes}
-            onChange={(e) =>
-              setNewNpc({ ...newNpc, notes: e.target.value })
-            }
-          />
+          {allNpcs.length === 0 ? (
+            <p style={{ color: 'var(--color-blood)', fontSize: '14px' }}>
+              Aucun PNJ dans la bibliothèque. Créez-en d'abord depuis l'onglet <strong>PNJ</strong>.
+            </p>
+          ) : (
+            <>
+              <Input
+                label=""
+                id="npc-search-filter"
+                placeholder="Filtrer par nom, espèce…"
+                value={npcSearchFilter}
+                onChange={e => {
+                  setNpcSearchFilter(e.target.value);
+                  setSelectedNpcId('');
+                }}
+              />
+
+              <div style={{
+                maxHeight: '200px',
+                overflowY: 'auto',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+              }}>
+                {allNpcs
+                  .filter(n =>
+                    n.name.toLowerCase().includes(npcSearchFilter.toLowerCase()) ||
+                    (n.species || '').toLowerCase().includes(npcSearchFilter.toLowerCase())
+                  )
+                  .map(npc => (
+                    <div
+                      key={npc.id}
+                      onClick={() => setSelectedNpcId(String(npc.id))}
+                      style={{
+                        padding: '0.6rem 0.75rem',
+                        cursor: 'pointer',
+                        backgroundColor: selectedNpcId === String(npc.id) ? 'var(--color-gold)' : 'white',
+                        borderBottom: '1px solid #eee',
+                        transition: 'background 0.15s',
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>{npc.name}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                        {[npc.gender, npc.species].filter(Boolean).join(' · ')}
+                        {npc.character_traits ? ` — ${npc.character_traits}` : ''}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+
+              {selectedNpcId && (
+                <div style={{
+                  borderTop: '1px dashed #ccc',
+                  paddingTop: '0.75rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                }}>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#666' }}>
+                    Surcharge optionnelle (laissez vide pour utiliser les valeurs du PNJ) :
+                  </p>
+                  <Input
+                    label="Nom alternatif"
+                    id="npc-override-name"
+                    placeholder={allNpcs.find(n => String(n.id) === selectedNpcId)?.name || ''}
+                    value={npcOverride.name}
+                    onChange={e => setNpcOverride({ ...npcOverride, name: e.target.value })}
+                  />
+                  <Input
+                    label="Rôle dans la scène"
+                    id="npc-override-role"
+                    placeholder="Ex: Marchand de potions"
+                    value={npcOverride.role}
+                    onChange={e => setNpcOverride({ ...npcOverride, role: e.target.value })}
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {error && <p style={{ color: 'var(--color-blood)', fontSize: '13px', margin: 0 }}>{error}</p>}
+
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
             <Button
               variant="secondary"
-              onClick={() => setShowAddNpcModal(false)}
+              onClick={() => {
+                setShowAddNpcModal(false);
+                setSelectedNpcId('');
+                setNpcSearchFilter('');
+                setNpcOverride({ name: '', role: '', armor_class: 10, max_hp: 10, notes: '' });
+              }}
             >
               Annuler
             </Button>
             <Button
               variant="primary"
               onClick={handleAddNpc}
+              disabled={!selectedNpcId}
             >
-              Ajouter
+              Attacher
             </Button>
           </div>
         </div>

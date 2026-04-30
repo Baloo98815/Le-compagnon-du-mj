@@ -18,8 +18,6 @@ function getDb() {
   if (!db) {
     try {
       db = new DatabaseSync(DB_PATH);
-      // Activer WAL mode et foreign keys via PRAGMA SQL
-      // WAL mode pour les performances (peut être désactivé si le filesystem ne le supporte pas)
       try { db.exec('PRAGMA journal_mode = WAL'); } catch (e) { /* filesystem non compatible WAL */ }
       db.exec('PRAGMA foreign_keys = ON');
       logger.info(`Base de données connectée : ${DB_PATH}`);
@@ -35,7 +33,6 @@ function initDatabase() {
   const database = getDb();
 
   database.exec(`
-    -- Campagnes
     CREATE TABLE IF NOT EXISTS campaigns (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -45,7 +42,6 @@ function initDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
-    -- Personnages joueurs
     CREATE TABLE IF NOT EXISTS players (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -83,7 +79,6 @@ function initDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
-    -- Association joueurs <-> campagnes
     CREATE TABLE IF NOT EXISTS campaign_players (
       campaign_id INTEGER NOT NULL,
       player_id INTEGER NOT NULL,
@@ -92,7 +87,6 @@ function initDatabase() {
       FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
     );
 
-    -- Ennemis (modèles de base)
     CREATE TABLE IF NOT EXISTS enemies (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -124,7 +118,6 @@ function initDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
-    -- Scènes
     CREATE TABLE IF NOT EXISTS scenes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       campaign_id INTEGER NOT NULL,
@@ -138,7 +131,6 @@ function initDatabase() {
       FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
     );
 
-    -- Lieux d'une scène
     CREATE TABLE IF NOT EXISTS scene_locations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       scene_id INTEGER NOT NULL,
@@ -148,10 +140,31 @@ function initDatabase() {
       FOREIGN KEY (scene_id) REFERENCES scenes(id) ON DELETE CASCADE
     );
 
-    -- PNJ d'une scène
+    CREATE TABLE IF NOT EXISTS npcs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      species TEXT,
+      gender TEXT,
+      character_traits TEXT,
+      armor_class INTEGER DEFAULT 10,
+      max_hp INTEGER DEFAULT 10,
+      strength INTEGER DEFAULT 10,
+      dexterity INTEGER DEFAULT 10,
+      constitution INTEGER DEFAULT 10,
+      intelligence INTEGER DEFAULT 10,
+      wisdom INTEGER DEFAULT 10,
+      charisma INTEGER DEFAULT 10,
+      speed INTEGER DEFAULT 30,
+      token_image TEXT,
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS scene_npcs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       scene_id INTEGER NOT NULL,
+      npc_id INTEGER,
       name TEXT NOT NULL,
       role TEXT,
       armor_class INTEGER DEFAULT 10,
@@ -166,10 +179,10 @@ function initDatabase() {
       speed INTEGER DEFAULT 30,
       token_image TEXT,
       notes TEXT,
-      FOREIGN KEY (scene_id) REFERENCES scenes(id) ON DELETE CASCADE
+      FOREIGN KEY (scene_id) REFERENCES scenes(id) ON DELETE CASCADE,
+      FOREIGN KEY (npc_id) REFERENCES npcs(id) ON DELETE SET NULL
     );
 
-    -- Instances d'ennemis dans une scène (copie indépendante)
     CREATE TABLE IF NOT EXISTS scene_enemy_instances (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       scene_id INTEGER NOT NULL,
@@ -186,7 +199,6 @@ function initDatabase() {
       FOREIGN KEY (enemy_id) REFERENCES enemies(id) ON DELETE CASCADE
     );
 
-    -- Tracker d'initiative
     CREATE TABLE IF NOT EXISTS initiative_trackers (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       scene_id INTEGER NOT NULL UNIQUE,
@@ -198,7 +210,6 @@ function initDatabase() {
       FOREIGN KEY (scene_id) REFERENCES scenes(id) ON DELETE CASCADE
     );
 
-    -- Participants du tracker
     CREATE TABLE IF NOT EXISTS tracker_participants (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       tracker_id INTEGER NOT NULL,
@@ -212,7 +223,6 @@ function initDatabase() {
       FOREIGN KEY (tracker_id) REFERENCES initiative_trackers(id) ON DELETE CASCADE
     );
 
-    -- Triggers pour updated_at
     CREATE TRIGGER IF NOT EXISTS campaigns_updated_at
       AFTER UPDATE ON campaigns
       BEGIN
@@ -236,9 +246,23 @@ function initDatabase() {
       BEGIN
         UPDATE enemies SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
       END;
+
+    CREATE TRIGGER IF NOT EXISTS npcs_updated_at
+      AFTER UPDATE ON npcs
+      BEGIN
+        UPDATE npcs SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+      END;
   `);
 
-  logger.info('Base de données initialisée avec succès');
+  // Migration : ajouter npc_id a scene_npcs si la colonne n existe pas encore
+  try {
+    database.exec('ALTER TABLE scene_npcs ADD COLUMN npc_id INTEGER REFERENCES npcs(id) ON DELETE SET NULL');
+    logger.info('Migration : colonne npc_id ajoutee a scene_npcs');
+  } catch (e) {
+    // Colonne deja presente - ignorer
+  }
+
+  logger.info('Base de donnees initialisee avec succes');
   return database;
 }
 

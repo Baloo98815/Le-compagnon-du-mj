@@ -15,6 +15,7 @@ import PlayerDetailPage from './pages/PlayerDetailPage'
 import EnemiesPage from './pages/EnemiesPage'
 import EnemyDetailPage from './pages/EnemyDetailPage'
 import SceneDetailPage from './pages/SceneDetailPage'
+import NPCsPage from './pages/NPCsPage'
 import DMScreenPage from './pages/DMScreenPage'
 
 createRoot(document.getElementById('root')).render(
@@ -44,6 +45,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/players/:id" element={<PlayerDetailPage />} />
         <Route path="/enemies" element={<EnemiesPage />} />
         <Route path="/enemies/:id" element={<EnemyDetailPage />} />
+        <Route path="/npcs" element={<NPCsPage />} />
         <Route path="/scenes/:id" element={<SceneDetailPage />} />
       </Routes>
     </BrowserRouter>

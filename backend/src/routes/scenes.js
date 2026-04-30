@@ -4,7 +4,6 @@ const { getDb } = require('../db/database');
 const { asyncHandler } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
-// GET /api/scenes?campaign_id=X
 router.get('/', asyncHandler((req, res) => {
   const db = getDb();
   const { campaign_id } = req.query;
@@ -17,12 +16,10 @@ router.get('/', asyncHandler((req, res) => {
   res.json({ success: true, data: scenes });
 }));
 
-// GET /api/scenes/:id - Détail complet d'une scène
 router.get('/:id', asyncHandler((req, res) => {
   const db = getDb();
   const scene = db.prepare('SELECT * FROM scenes WHERE id = ?').get(req.params.id);
-  if (!scene) return res.status(404).json({ success: false, error: 'Scène non trouvée' });
-
+  if (!scene) return res.status(404).json({ success: false, error: 'Scene non trouvee' });
   const locations = db.prepare('SELECT * FROM scene_locations WHERE scene_id = ?').all(req.params.id);
   const npcs = db.prepare('SELECT * FROM scene_npcs WHERE scene_id = ?').all(req.params.id);
   const enemyInstances = db.prepare(`
@@ -32,42 +29,30 @@ router.get('/:id', asyncHandler((req, res) => {
     FROM scene_enemy_instances sei
     JOIN enemies e ON e.id = sei.enemy_id
     WHERE sei.scene_id = ?
-  `).all(req.params.id).map(inst => ({
-    ...inst,
-    conditions: JSON.parse(inst.conditions || '[]')
-  }));
-
-  res.json({
-    success: true,
-    data: { ...scene, locations, npcs, enemy_instances: enemyInstances }
-  });
+  `).all(req.params.id).map(inst => ({ ...inst, conditions: JSON.parse(inst.conditions || '[]') }));
+  res.json({ success: true, data: { ...scene, locations, npcs, enemy_instances: enemyInstances } });
 }));
 
-// POST /api/scenes - Créer une scène
 router.post('/', asyncHandler((req, res) => {
   const { campaign_id, name, is_combat, description, notes, map_url } = req.body;
   if (!campaign_id) return res.status(400).json({ success: false, error: 'campaign_id est requis' });
-  if (!name || name.trim() === '') return res.status(400).json({ success: false, error: 'Le nom de la scène est requis' });
-
+  if (!name || name.trim() === '') return res.status(400).json({ success: false, error: 'Le nom de la scene est requis' });
   const db = getDb();
   const campaign = db.prepare('SELECT id FROM campaigns WHERE id = ?').get(campaign_id);
-  if (!campaign) return res.status(404).json({ success: false, error: 'Campagne non trouvée' });
-
+  if (!campaign) return res.status(404).json({ success: false, error: 'Campagne non trouvee' });
   const result = db.prepare(`
     INSERT INTO scenes (campaign_id, name, is_combat, description, notes, map_url)
     VALUES (?, ?, ?, ?, ?, ?)
   `).run(campaign_id, name.trim(), is_combat ? 1 : 0, description || null, notes || null, map_url || null);
-
   const scene = db.prepare('SELECT * FROM scenes WHERE id = ?').get(result.lastInsertRowid);
-  logger.info('Scène créée', { id: scene.id, name: scene.name, campaign_id });
+  logger.info('Scene creee', { id: scene.id, name: scene.name, campaign_id });
   res.status(201).json({ success: true, data: scene });
 }));
 
-// PUT /api/scenes/:id
 router.put('/:id', asyncHandler((req, res) => {
   const db = getDb();
   if (!db.prepare('SELECT id FROM scenes WHERE id = ?').get(req.params.id)) {
-    return res.status(404).json({ success: false, error: 'Scène non trouvée' });
+    return res.status(404).json({ success: false, error: 'Scene non trouvee' });
   }
   const { name, is_combat, description, notes, map_url } = req.body;
   db.prepare(`
@@ -80,19 +65,18 @@ router.put('/:id', asyncHandler((req, res) => {
     WHERE id = ?
   `).run(name?.trim() || null, is_combat !== undefined ? (is_combat ? 1 : 0) : null, description ?? null, notes ?? null, map_url ?? null, req.params.id);
   const scene = db.prepare('SELECT * FROM scenes WHERE id = ?').get(req.params.id);
-  logger.info('Scène modifiée', { id: req.params.id });
+  logger.info('Scene modifiee', { id: req.params.id });
   res.json({ success: true, data: scene });
 }));
 
-// DELETE /api/scenes/:id
 router.delete('/:id', asyncHandler((req, res) => {
   const db = getDb();
   if (!db.prepare('SELECT id FROM scenes WHERE id = ?').get(req.params.id)) {
-    return res.status(404).json({ success: false, error: 'Scène non trouvée' });
+    return res.status(404).json({ success: false, error: 'Scene non trouvee' });
   }
   db.prepare('DELETE FROM scenes WHERE id = ?').run(req.params.id);
-  logger.info('Scène supprimée', { id: req.params.id });
-  res.json({ success: true, message: 'Scène supprimée' });
+  logger.info('Scene supprimee', { id: req.params.id });
+  res.json({ success: true, message: 'Scene supprimee' });
 }));
 
 // ---- LIEUX ----
@@ -123,7 +107,7 @@ router.put('/:id/locations/:locId', asyncHandler((req, res) => {
 router.delete('/:id/locations/:locId', asyncHandler((req, res) => {
   const db = getDb();
   db.prepare('DELETE FROM scene_locations WHERE id = ? AND scene_id = ?').run(req.params.locId, req.params.id);
-  res.json({ success: true, message: 'Lieu supprimé' });
+  res.json({ success: true, message: 'Lieu supprime' });
 }));
 
 // ---- PNJ ----
@@ -134,13 +118,42 @@ router.get('/:id/npcs', asyncHandler((req, res) => {
 }));
 
 router.post('/:id/npcs', asyncHandler((req, res) => {
-  const { name, role, armor_class, max_hp, strength, dexterity, constitution, intelligence, wisdom, charisma, speed, notes } = req.body;
-  if (!name) return res.status(400).json({ success: false, error: 'Le nom du PNJ est requis' });
   const db = getDb();
+  let data = { ...req.body };
+
+  if (data.npc_id) {
+    const source = db.prepare('SELECT * FROM npcs WHERE id = ?').get(data.npc_id);
+    if (!source) return res.status(404).json({ success: false, error: 'PNJ de reference non trouve' });
+    data = {
+      npc_id: source.id,
+      name: data.name || source.name,
+      role: data.role || source.character_traits || null,
+      armor_class: data.armor_class ?? source.armor_class,
+      max_hp: data.max_hp ?? source.max_hp,
+      strength: data.strength ?? source.strength,
+      dexterity: data.dexterity ?? source.dexterity,
+      constitution: data.constitution ?? source.constitution,
+      intelligence: data.intelligence ?? source.intelligence,
+      wisdom: data.wisdom ?? source.wisdom,
+      charisma: data.charisma ?? source.charisma,
+      speed: data.speed ?? source.speed,
+      notes: data.notes || source.notes || null,
+    };
+  }
+
+  const { npc_id, name, role, armor_class, max_hp, strength, dexterity, constitution, intelligence, wisdom, charisma, speed, notes } = data;
+  if (!name) return res.status(400).json({ success: false, error: 'Le nom du PNJ est requis' });
+
   const result = db.prepare(`
-    INSERT INTO scene_npcs (scene_id, name, role, armor_class, max_hp, current_hp, strength, dexterity, constitution, intelligence, wisdom, charisma, speed, notes)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(req.params.id, name, role || null, armor_class || 10, max_hp || 10, max_hp || 10, strength || 10, dexterity || 10, constitution || 10, intelligence || 10, wisdom || 10, charisma || 10, speed || 30, notes || null);
+    INSERT INTO scene_npcs (scene_id, npc_id, name, role, armor_class, max_hp, current_hp, strength, dexterity, constitution, intelligence, wisdom, charisma, speed, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    req.params.id, npc_id || null, name, role || null,
+    armor_class ?? 10, max_hp ?? 10, max_hp ?? 10,
+    strength ?? 10, dexterity ?? 10, constitution ?? 10,
+    intelligence ?? 10, wisdom ?? 10, charisma ?? 10,
+    speed ?? 30, notes || null
+  );
   const npc = db.prepare('SELECT * FROM scene_npcs WHERE id = ?').get(result.lastInsertRowid);
   res.status(201).json({ success: true, data: npc });
 }));
@@ -162,7 +175,7 @@ router.put('/:id/npcs/:npcId', asyncHandler((req, res) => {
 router.delete('/:id/npcs/:npcId', asyncHandler((req, res) => {
   const db = getDb();
   db.prepare('DELETE FROM scene_npcs WHERE id = ? AND scene_id = ?').run(req.params.npcId, req.params.id);
-  res.json({ success: true, message: 'PNJ supprimé' });
+  res.json({ success: true, message: 'PNJ supprime' });
 }));
 
 // ---- INSTANCES D'ENNEMIS ----
@@ -171,7 +184,7 @@ router.post('/:id/enemies', asyncHandler((req, res) => {
   if (!enemy_id) return res.status(400).json({ success: false, error: 'enemy_id est requis' });
   const db = getDb();
   const enemy = db.prepare('SELECT * FROM enemies WHERE id = ?').get(enemy_id);
-  if (!enemy) return res.status(404).json({ success: false, error: 'Ennemi non trouvé' });
+  if (!enemy) return res.status(404).json({ success: false, error: 'Ennemi non trouve' });
 
   const instances = [];
   const insertStmt = db.prepare(`
@@ -183,15 +196,15 @@ router.post('/:id/enemies', asyncHandler((req, res) => {
     const result = insertStmt.run(req.params.id, enemy_id, name, enemy.armor_class, enemy.max_hp, enemy.max_hp);
     instances.push(db.prepare('SELECT * FROM scene_enemy_instances WHERE id = ?').get(result.lastInsertRowid));
   }
-  logger.info('Instances ennemies ajoutées', { sceneId: req.params.id, enemyId: enemy_id, count });
+  logger.info('Instances ennemies ajoutees', { sceneId: req.params.id, enemyId: enemy_id, count });
   res.status(201).json({ success: true, data: instances });
 }));
 
 router.delete('/:id/enemies/:instanceId', asyncHandler((req, res) => {
   const db = getDb();
   db.prepare('DELETE FROM scene_enemy_instances WHERE id = ? AND scene_id = ?').run(req.params.instanceId, req.params.id);
-  logger.info('Instance ennemie supprimée', { instanceId: req.params.instanceId });
-  res.json({ success: true, message: 'Ennemi retiré de la scène' });
+  logger.info('Instance ennemie supprimee', { instanceId: req.params.instanceId });
+  res.json({ success: true, message: 'Ennemi retire de la scene' });
 }));
 
 module.exports = router;
