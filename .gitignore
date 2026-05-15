@@ -12,11 +12,6 @@ build/
 .env.local
 .env.production
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-backend/data/
 
 # Logs
 logs/
