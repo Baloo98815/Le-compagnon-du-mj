@@ -10,6 +10,7 @@
   justify-content: center;
   flex-shrink: 0;
   transition: border-color 0.2s;
+  max-width: 100px;
 }
 
 .token-avatar:hover { border-color: var(--color-gold); }
