@@ -493,9 +493,7 @@ export default function CampaignDetailPage() {
                     <span
                       style={{
                         ...pageStyles.sceneType,
-                        ...(scene.is_combat
-                          ? pageStyles.sceneTypeCombat
-                          : pageStyles.sceneTypeRoleplay),
+                        ...pageStyles.sceneTypeCombat,
                       }}
                     >
                       {scene.is_combat ? '⚔️ Combat' : '🎭 Roleplay'}

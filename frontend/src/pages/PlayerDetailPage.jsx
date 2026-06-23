@@ -92,7 +92,7 @@ const pageStyles = {
   saveLabel: {
     flex: 1,
     fontSize: '13px',
-    color: 'var(--color-parchment)',
+    color: 'var(--color-text)',
   },
   saveValue: {
     fontSize: '14px',
@@ -118,7 +118,7 @@ const pageStyles = {
   skillLabel: {
     flex: 1,
     fontSize: '13px',
-    color: 'var(--color-parchment)',
+    color: 'var(--color-text)',
   },
   skillValue: {
     fontSize: '13px',
@@ -141,8 +141,8 @@ const pageStyles = {
     textAlign: 'center',
   },
   combatStatLabel: {
-    fontSize: '12px',
-    color: 'var(--color-parchment)',
+    fontSize: '14px',
+    color: 'var(--color-text)',
     marginBottom: '6px',
   },
   combatStatValue: {

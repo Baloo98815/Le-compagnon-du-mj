@@ -179,7 +179,7 @@ function NpcForm({ value, onChange }) {
         <Input label="Vitesse" id="npc-speed" type="number" value={value.speed} onChange={s('speed')} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '0.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: '0.5rem' }}>
         {['strength','dexterity','constitution','intelligence','wisdom','charisma'].map(stat => (
           <Input
             key={stat}

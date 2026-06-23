@@ -439,7 +439,7 @@ export default function DMScreenPage() {
 
     return (
       <div style={S.panel}>
-        <div style={S.panelTitle}>📋 Récap Ennemis</div>
+        <div style={S.panelTitle}>📋 Récap Enemies</div>
         {unique.map(inst => {
           const showCard =
             hasContent(inst.enemy_abilities) || hasContent(inst.enemy_actions) ||
@@ -451,7 +451,6 @@ export default function DMScreenPage() {
             <div key={inst.enemy_id} style={S.enemyRecapCard}>
               <div style={S.enemyRecapTitle}>
                 {inst.enemy_name}
-                {inst.enemy_cr ? <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginLeft: '0.5rem' }}>CR {inst.enemy_cr}</span> : null}
               </div>
 
               {hasContent(inst.enemy_abilities) && (
@@ -693,7 +692,7 @@ export default function DMScreenPage() {
                     {scene.enemy_instances && scene.enemy_instances.length > 0 && (
                       <div style={{ borderTop: '1px dashed var(--color-border)', marginTop: '0.5rem', paddingTop: '0.5rem' }}>
                         <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '0.4rem', fontFamily: 'Cinzel, serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                          Ennemis
+                          Enemies
                         </div>
                         {scene.enemy_instances.map(se => {
                           const isDead = (se.current_hp ?? se.max_hp ?? 1) <= 0;
