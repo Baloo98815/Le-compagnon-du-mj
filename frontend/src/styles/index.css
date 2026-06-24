@@ -16,7 +16,7 @@
 
   /* Textes */
   --color-text:           #cec0a0;
-  --color-text-muted:     #7a8faa;
+  --color-text-muted:     #95b1d5;
   --color-text-subtle:    #435268;
 
   /* Accents */
@@ -25,6 +25,7 @@
   --color-blood-light:    #c83838;
   --color-forest:         #1a4a2e;
   --color-forest-light:   #2d7a4e;
+  --color-green-light:   #22c55e;
   --color-stone:          #7a8faa;
   --color-stone-light:    #9aacc0;
   --color-gold:           #d4a017;

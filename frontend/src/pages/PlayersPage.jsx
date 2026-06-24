@@ -30,6 +30,12 @@ const pageStyles = {
     margin: 0,
     fontWeight: 'bold',
   },
+  subtitle: {
+    fontSize: '16px',
+    color: 'var(--color-leather)',
+    margin: 0,
+    fontWeight: 'bold',
+  },
   playersGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
@@ -66,6 +72,27 @@ const pageStyles = {
     color: 'var(--color-text-muted)',
     marginBottom: '4px',
     lineHeight: '1.6',
+  },
+  playerValues: {
+    fontSize: '14px',
+    color: 'var(--color-leather)',
+  },
+  playerSubValues: {
+    color: 'var(--color-green-light)',
+  },
+  playerSaves: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '8px',
+  },
+  playerSaveItem: {
+    minWidth: 0,
+    fontSize: '16px',
+    color: 'var(--color-leather)',
+  },
+  playerModifier: {
+    fontWeight: 'bold',
+    color: 'var(--color-green-light)',
   },
   divider: {
     borderTop: '1px solid var(--color-gold-light)',
@@ -181,6 +208,15 @@ export default function PlayersPage() {
     }
   };
 
+  const formatModifier = (value) => {
+    if (value == null || value === '') return '+ 0';
+
+    const num = Number(value);
+    if (Number.isNaN(num)) return '+ 0';
+
+    return num >= 0 ? `+${num}` : `${num}`;
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -269,16 +305,49 @@ export default function PlayersPage() {
                   <h3 style={pageStyles.playerName}>{player.name}</h3>
 
                   <div style={pageStyles.playerStats}>
-                    <div>{player.race}</div>
-                    <div>{player.class}</div>
-                    <div>Niveau {player.level}</div>
+                    <div>{player.race} - {player.class}</div>
                   </div>
 
                   <div style={pageStyles.divider} />
 
                   <div style={pageStyles.playerStats}>
-                    <div>CA: {player.armor_class || '-'}</div>
-                    <div>PV: {player.max_hp || '-'}</div>
+                    <div style={pageStyles.playerValues}>
+                      CA: <span style={pageStyles.playerSubValues}>{player.armor_class || '0'}</span> -
+                      PV: <span style={pageStyles.playerSubValues}>{player.max_hp || '0'}</span>
+                    </div>
+                  </div>
+
+                  <div style={pageStyles.divider} />
+
+                  <div style={pageStyles.playerStats}>
+                    <div style={pageStyles.subtitle}>SAUVEGARDE</div>
+
+                    <div style={pageStyles.playerSaves}>
+                      <div style={pageStyles.playerSaveItem}>
+                        Charisme:
+                        <span style={pageStyles.playerModifier}> {formatModifier(player.save_charisma)}</span>
+                      </div>
+                      <div style={pageStyles.playerSaveItem}>
+                        Constitution:
+                        <span style={pageStyles.playerModifier}> {formatModifier(player.save_constitution)}</span>
+                      </div>
+                      <div style={pageStyles.playerSaveItem}>
+                        Dextérité:
+                        <span style={pageStyles.playerModifier}> {formatModifier(player.save_dexterity)}</span>
+                      </div>
+                      <div style={pageStyles.playerSaveItem}>
+                        Intelligence:
+                        <span style={pageStyles.playerModifier}> {formatModifier(player.save_intelligence)}</span>
+                      </div>
+                      <div style={pageStyles.playerSaveItem}>
+                        Force:
+                        <span style={pageStyles.playerModifier}> {formatModifier(player.save_strength)}</span>
+                      </div>
+                      <div style={pageStyles.playerSaveItem}>
+                        Sagesse:
+                        <span style={pageStyles.playerModifier}> {formatModifier(player.save_wisdom)}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>

@@ -36,7 +36,10 @@ export default function EnemiesPage() {
     try {
       setLoading(true);
       const data = await enemiesAPI.getAll();
-      setEnemies(data || []);
+      const sorted = (data || []).sort((a, b) =>
+        (a.name || '').localeCompare(b.name || '', 'fr', { sensitivity: 'base' })
+      );
+      setEnemies(sorted);
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -141,10 +144,15 @@ export default function EnemiesPage() {
     lineHeight: '1.4',
   };
 
-  const cardActionsStyle = {
+  const cardSubStatsStyle= {
     display: 'flex',
-    gap: '0.5rem',
-  };
+    gap: '10px',
+    fontSize: '1rem',
+  }
+
+  const cardSubStatsStyleValue = {
+    color: 'var(--color-green-light)',
+  }
 
   const loadingStyle = {
     textAlign: 'center',
@@ -225,9 +233,11 @@ export default function EnemiesPage() {
                   <h3 style={cardNameStyle}>{enemy.name}</h3>
                   <div style={cardStatsStyle}>
                     {enemy.type && <div>Type: {enemy.type}</div>}
-                    <div>CR: {enemy.challenge_rating ?? '—'}</div>
-                    <div>CA: {enemy.armor_class ?? '—'}</div>
-                    <div>HP: {enemy.max_hp ?? '—'}</div>
+                    <div style={cardSubStatsStyle}>
+                      <div>CR: <span style={cardSubStatsStyleValue}>{enemy.challenge_rating ?? '—'}</span></div>
+                      <div>CA: <span style={cardSubStatsStyleValue}>{enemy.armor_class ?? '—'}</span></div>
+                      <div>HP: <span style={cardSubStatsStyleValue}>{enemy.max_hp ?? '—'}</span></div>
+                    </div>
                   </div>
                 </div>
               </div>
