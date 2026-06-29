@@ -33,6 +33,14 @@ function initDatabase() {
   const database = getDb();
 
   database.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS campaigns (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -223,6 +231,12 @@ function initDatabase() {
       sort_order INTEGER DEFAULT 0,
       FOREIGN KEY (tracker_id) REFERENCES initiative_trackers(id) ON DELETE CASCADE
     );
+
+    CREATE TRIGGER IF NOT EXISTS users_updated_at
+      AFTER UPDATE ON users
+      BEGIN
+        UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+      END;
 
     CREATE TRIGGER IF NOT EXISTS campaigns_updated_at
       AFTER UPDATE ON campaigns

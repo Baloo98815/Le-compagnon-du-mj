@@ -8,6 +8,9 @@ import { initClientLogger } from './utils/clientLogger'
 initClientLogger()
 
 import './styles/index.css'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import LoginPage from './pages/LoginPage'
 import CampaignsPage from './pages/CampaignsPage'
 import CampaignDetailPage from './pages/CampaignDetailPage'
 import PlayersPage from './pages/PlayersPage'
@@ -21,33 +24,38 @@ import DMScreenPage from './pages/DMScreenPage'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#2c2c2c',
-            color: '#f4e4c1',
-            border: '1px solid #d4a017',
-            fontFamily: 'Crimson Text, serif',
-          },
-        }}
-      />
-      <Routes>
-        {/* Écran du MJ (sans navbar) */}
-        <Route path="/dm" element={<DMScreenPage />} />
+      <AuthProvider>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#2c2c2c',
+              color: '#f4e4c1',
+              border: '1px solid #d4a017',
+              fontFamily: 'Crimson Text, serif',
+            },
+          }}
+        />
+        <Routes>
+          {/* Page de connexion (publique) */}
+          <Route path="/login" element={<LoginPage />} />
 
-        {/* Routes — chaque page gère son propre Layout */}
-        <Route path="/" element={<Navigate to="/campaigns" replace />} />
-        <Route path="/campaigns" element={<CampaignsPage />} />
-        <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
-        <Route path="/players" element={<PlayersPage />} />
-        <Route path="/players/:id" element={<PlayerDetailPage />} />
-        <Route path="/enemies" element={<EnemiesPage />} />
-        <Route path="/enemies/:id" element={<EnemyDetailPage />} />
-        <Route path="/npcs" element={<NPCsPage />} />
-        <Route path="/scenes/:id" element={<SceneDetailPage />} />
-      </Routes>
+          {/* Écran du MJ (sans navbar) */}
+          <Route path="/dm" element={<ProtectedRoute><DMScreenPage /></ProtectedRoute>} />
+
+          {/* Routes protégées — chaque page gère son propre Layout */}
+          <Route path="/" element={<Navigate to="/campaigns" replace />} />
+          <Route path="/campaigns" element={<ProtectedRoute><CampaignsPage /></ProtectedRoute>} />
+          <Route path="/campaigns/:id" element={<ProtectedRoute><CampaignDetailPage /></ProtectedRoute>} />
+          <Route path="/players" element={<ProtectedRoute><PlayersPage /></ProtectedRoute>} />
+          <Route path="/players/:id" element={<ProtectedRoute><PlayerDetailPage /></ProtectedRoute>} />
+          <Route path="/enemies" element={<ProtectedRoute><EnemiesPage /></ProtectedRoute>} />
+          <Route path="/enemies/:id" element={<ProtectedRoute><EnemyDetailPage /></ProtectedRoute>} />
+          <Route path="/npcs" element={<ProtectedRoute><NPCsPage /></ProtectedRoute>} />
+          <Route path="/scenes/:id" element={<ProtectedRoute><SceneDetailPage /></ProtectedRoute>} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 )

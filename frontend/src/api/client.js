@@ -1,16 +1,53 @@
 import axios from 'axios';
 
+const TOKEN_KEY = 'mj_token';
+const USER_KEY = 'mj_user';
+
+// ----- Gestion du jeton (partagée avec le contexte d'auth) -----
+export const tokenStore = {
+  get: () => localStorage.getItem(TOKEN_KEY),
+  set: (token) => localStorage.setItem(TOKEN_KEY, token),
+  clear: () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  },
+  getUser: () => {
+    try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch { return null; }
+  },
+  setUser: (user) => localStorage.setItem(USER_KEY, JSON.stringify(user)),
+};
+
 const api = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
 });
 
-// Intercepteur requête : log en dev
-api.interceptors.request.use(
-  (config) => config,
-  (error) => Promise.reject(error)
-);
+// Intercepteur requête : ajoute le jeton Bearer s'il existe
+function attachToken(config) {
+  const token = tokenStore.get();
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}
+
+api.interceptors.request.use(attachToken, (error) => Promise.reject(error));
+// L'instance globale axios sert aux uploads multipart : on y attache aussi le jeton.
+axios.interceptors.request.use(attachToken, (error) => Promise.reject(error));
+
+// En cas de 401 (hors page de connexion), on déconnecte et on renvoie au login.
+function handleUnauthorized(error) {
+  const status = error.response?.status;
+  const url = error.config?.url || '';
+  if (status === 401 && !url.includes('/auth/login')) {
+    tokenStore.clear();
+    if (window.location.pathname !== '/login') {
+      window.location.assign('/login');
+    }
+  }
+}
 
 // Intercepteur réponse : extraire le champ "data" du corps { success, data }
 // ou retourner le corps complet si pas de champ "data" (ex: { success, message })
@@ -20,12 +57,27 @@ api.interceptors.response.use(
     return body?.data !== undefined ? body.data : body;
   },
   (error) => {
+    handleUnauthorized(error);
     const message = error.response?.data?.error || error.message || 'Erreur réseau';
     return Promise.reject(new Error(message));
   }
 );
 
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    handleUnauthorized(error);
+    return Promise.reject(error);
+  }
+);
+
 export default api;
+
+// ----- AUTHENTIFICATION -----
+export const authAPI = {
+  login: (username, password) => api.post('/auth/login', { username, password }),
+  me: () => api.get('/auth/me'),
+};
 
 // ----- CAMPAGNES -----
 export const campaignsAPI = {

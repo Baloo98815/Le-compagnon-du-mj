@@ -2,15 +2,18 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { initDatabase } = require('./db/database');
+const { initDatabase, getDb } = require('./db/database');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const requestLogger = require('./middleware/requestLogger');
+const { requireAuth } = require('./middleware/auth');
+const { seedDefaultUser } = require('./utils/auth');
 const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 initDatabase();
+seedDefaultUser(getDb());
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
@@ -23,12 +26,16 @@ app.use(requestLogger);
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use('/api/campaigns', require('./routes/campaigns'));
-app.use('/api/players', require('./routes/players'));
-app.use('/api/enemies', require('./routes/enemies'));
-app.use('/api/scenes', require('./routes/scenes'));
-app.use('/api/npcs', require('./routes/npcs'));
-app.use('/api/tracker', require('./routes/tracker'));
+// Authentification (publique)
+app.use('/api/auth', require('./routes/auth'));
+
+// Routes métier — protégées par authentification
+app.use('/api/campaigns', requireAuth, require('./routes/campaigns'));
+app.use('/api/players', requireAuth, require('./routes/players'));
+app.use('/api/enemies', requireAuth, require('./routes/enemies'));
+app.use('/api/scenes', requireAuth, require('./routes/scenes'));
+app.use('/api/npcs', requireAuth, require('./routes/npcs'));
+app.use('/api/tracker', requireAuth, require('./routes/tracker'));
 app.use('/api/logs', require('./routes/logs'));
 
 app.get('/', (req, res) => {

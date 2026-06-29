@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -81,6 +90,16 @@ export default function Navbar() {
             >
               Écran du MJ
             </NavLink>
+          </li>
+          <li className="navbar-account">
+            {user && <span className="navbar-user" title="Connecté">{user.username}</span>}
+            <button
+              className="nav-link nav-logout"
+              onClick={() => { closeMenu(); handleLogout(); }}
+              data-testid="nav-logout"
+            >
+              <LogOut size={16} /> Déconnexion
+            </button>
           </li>
         </ul>
       </div>
