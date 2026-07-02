@@ -9,6 +9,13 @@ Ce document retrace les évolutions du projet, à partir de l'historique git et 
 
 ## [Non publié]
 
+### Ajouté
+- **Écran Admin** (`/admin`, `frontend/src/pages/AdminPage.jsx`) : réglage d'activation de la génération de PNJ assistée par IA, et générateur de PNJ (bouton "Générer" → affiche une suggestion → "Ajouter à la bibliothèque").
+- **Génération de PNJ (espèce, nom, traits)** : `backend/src/data/npcGenerator.js` fournit un tirage aléatoire local (toujours disponible) et un appel optionnel à l'API Perplexity (`PERPLEXITY_API_KEY` dans `.env`, jamais exposée côté client). En cas d'échec de l'appel IA, repli automatique et silencieux sur le tirage aléatoire.
+- **Route `/api/admin`** (`backend/src/routes/admin.js`, protégée par `requireAuth`) : `GET/PUT /settings` (toggle `npc_ai_enabled`, persistance en base) et `POST /npcs/generate`.
+- **Table `app_settings`** (clé/valeur) dans `backend/src/db/database.js` pour les réglages admin modifiables sans redémarrage.
+- Le tirage aléatoire déjà présent sur `NPCsPage` (bouton "Générer aléatoirement") génère désormais aussi un nom (auparavant laissé vide).
+
 ### Modifié
 - **`backend/src/routes/players.js`** — extraction de la liste des champs autorisés dans une constante `PLAYER_FIELDS` (déduplication entre `buildPlayerFields` et `buildPlayerUpdates`, même approche que `ENEMY_FIELDS` dans `enemies.js`). Refacto pur, aucun changement de comportement.
 
