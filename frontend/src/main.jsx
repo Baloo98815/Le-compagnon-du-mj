@@ -20,6 +20,7 @@ import EnemyDetailPage from './pages/EnemyDetailPage'
 import SceneDetailPage from './pages/SceneDetailPage'
 import NPCsPage from './pages/NPCsPage'
 import DMScreenPage from './pages/DMScreenPage'
+import AdminPage from './pages/AdminPage'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -54,6 +55,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/enemies/:id" element={<ProtectedRoute><EnemyDetailPage /></ProtectedRoute>} />
           <Route path="/npcs" element={<ProtectedRoute><NPCsPage /></ProtectedRoute>} />
           <Route path="/scenes/:id" element={<ProtectedRoute><SceneDetailPage /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

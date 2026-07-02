@@ -151,6 +151,13 @@ export const scenesAPI = {
   removeEnemy: (sceneId, instanceId) => api.delete(`/scenes/${sceneId}/enemies/${instanceId}`),
 };
 
+// ----- ADMIN -----
+export const adminAPI = {
+  getSettings: () => api.get('/admin/settings'),
+  updateSettings: (data) => api.put('/admin/settings', data),
+  generateNpc: () => api.post('/admin/npcs/generate'),
+};
+
 // ----- TRACKER -----
 export const trackerAPI = {
   get: (sceneId) => api.get(`/tracker/${sceneId}`),

@@ -91,6 +91,16 @@ export default function Navbar() {
               Écran du MJ
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+              onClick={closeMenu}
+              data-testid="nav-admin"
+            >
+              Admin
+            </NavLink>
+          </li>
           <li className="navbar-account">
             {user && <span className="navbar-user" title="Connecté">{user.username}</span>}
             <button

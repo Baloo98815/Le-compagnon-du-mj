@@ -689,7 +689,6 @@ export default function CampaignDetailPage() {
               fontSize: '14px',
               backgroundColor: 'var(--color-surface-2)',
               color: 'var(--color-text)',
-              color: 'var(--color-text-muted)',
               resize: 'vertical',
             }}
           />

@@ -72,8 +72,20 @@ const CONDITION_WORDS = [
   'craintif', 'pressé', 'distrait', 'concentré', 'nostalgique',
 ];
 
+const NAME_SYLLABLES = {
+  start: ['Kar', 'Bel', 'Thor', 'Ely', 'Mor', 'Syl', 'Dun', 'Fae', 'Gor', 'Ith', 'Val', 'Zan', 'Ren', 'Nym', 'Ost'],
+  middle: ['an', 'or', 'ith', 'el', 'ra', 'in', 'ol', 'ar', 'ys', 'en'],
+  end: ['ath', 'wyn', 'dor', 'ien', 'ric', 'ka', 'nor', 'lys', 'am', 'or'],
+};
+
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateRandomName() {
+  const { start, middle, end } = NAME_SYLLABLES;
+  const name = `${pick(start)}${pick(middle)}${pick(end)}`;
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }
 
 function generateRandomNPC() {
@@ -89,7 +101,7 @@ function generateRandomNPC() {
   const character_traits = `${mainTrait} mais ${condition}, ${secondTrait}`;
 
   return {
-    name: '',
+    name: generateRandomName(),
     species,
     gender,
     character_traits,

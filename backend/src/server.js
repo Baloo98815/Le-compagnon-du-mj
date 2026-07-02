@@ -36,6 +36,7 @@ app.use('/api/enemies', requireAuth, require('./routes/enemies'));
 app.use('/api/scenes', requireAuth, require('./routes/scenes'));
 app.use('/api/npcs', requireAuth, require('./routes/npcs'));
 app.use('/api/tracker', requireAuth, require('./routes/tracker'));
+app.use('/api/admin', requireAuth, require('./routes/admin'));
 app.use('/api/logs', require('./routes/logs'));
 
 app.get('/', (req, res) => {

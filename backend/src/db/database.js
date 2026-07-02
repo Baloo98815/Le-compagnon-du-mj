@@ -267,6 +267,12 @@ function initDatabase() {
       BEGIN
         UPDATE npcs SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
       END;
+
+    CREATE TABLE IF NOT EXISTS app_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // Migration : ajouter damage_vulnerabilities si absent
