@@ -63,6 +63,16 @@ export default function Navbar() {
           </li>
           <li>
             <NavLink
+              to="/players/creer"
+              className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+              onClick={closeMenu}
+              data-testid="nav-create-character"
+            >
+              Création
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/enemies"
               className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
               onClick={closeMenu}

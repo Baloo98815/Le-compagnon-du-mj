@@ -234,13 +234,22 @@ export default function PlayersPage() {
       <div style={pageStyles.container} data-testid="players-page">
         <div style={pageStyles.header}>
           <h1 style={pageStyles.title}>Personnages Joueurs</h1>
-          <Button
-            variant="primary"
-            onClick={() => setShowCreateModal(true)}
-            data-testid="create-player-btn"
-          >
-            + Nouveau personnage
-          </Button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button
+              variant="secondary"
+              onClick={() => navigate('/players/creer')}
+              data-testid="create-character-wizard-btn"
+            >
+              🧙 Assistant de création
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setShowCreateModal(true)}
+              data-testid="create-player-btn"
+            >
+              + Nouveau personnage
+            </Button>
+          </div>
         </div>
 
         {players.length === 0 ? (

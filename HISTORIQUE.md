@@ -10,6 +10,8 @@ Ce document retrace les évolutions du projet, à partir de l'historique git et 
 ## [Non publié]
 
 ### Ajouté
+- **Assistant de création de personnage** (`/players/creer`, `frontend/src/pages/CharacterCreatorPage.jsx`) : wizard multi-étapes D&D 2024 (espèce → classe → statistiques → identité → compétences → sorts si lanceur → historique → récapitulatif). Réintégration native (React 19, thème médiéval) de l'app externe `rpg-character-creator` (Expo/React Native). À la fin, le personnage est enregistré directement dans la table `players` via `playersAPI.create()` — donc utilisable dans les campagnes et l'écran du MJ. Accessible depuis la navbar (« Création ») et un bouton « 🧙 Assistant de création » sur la page Joueurs.
+- **Base de règles D&D 2024** (`frontend/src/data/dnd2024/`) : portage JS des données du `rpg-character-creator` — `species.js` (8 espèces), `classes.js` (12 classes), `feats.js` (dons d'origine + `BACKGROUND_FEAT_MAP`), `spells.js` (tours de magie + sorts de niveau 1), `rules.js` (modificateur, PV, CA, bonus de maîtrise), assemblés par `index.js` (`getSystem`). `characterMapper.js` convertit un brouillon de personnage en payload `players` (calcul des sauvegardes, PV, CA, perceptions passives, correspondance des noms de compétences, note récapitulative).
 - **Écran Admin** (`/admin`, `frontend/src/pages/AdminPage.jsx`) : réglage d'activation de la génération de PNJ assistée par IA, et générateur de PNJ (bouton "Générer" → affiche une suggestion → "Ajouter à la bibliothèque").
 - **Génération de PNJ (espèce, nom, traits)** : `backend/src/data/npcGenerator.js` fournit un tirage aléatoire local (toujours disponible) et un appel optionnel à l'API Perplexity (`PERPLEXITY_API_KEY` dans `.env`, jamais exposée côté client). En cas d'échec de l'appel IA, repli automatique et silencieux sur le tirage aléatoire.
 - **Route `/api/admin`** (`backend/src/routes/admin.js`, protégée par `requireAuth`) : `GET/PUT /settings` (toggle `npc_ai_enabled`, persistance en base) et `POST /npcs/generate`.
@@ -17,6 +19,7 @@ Ce document retrace les évolutions du projet, à partir de l'historique git et 
 - Le tirage aléatoire déjà présent sur `NPCsPage` (bouton "Générer aléatoirement") génère désormais aussi un nom (auparavant laissé vide).
 
 ### Modifié
+- **`frontend/src/pages/PlayerDetailPage.jsx`** — ajout des espèces de base D&D 2024 (`Elfe`, `Nain`, `Halfelin`, `Gnome`, `Demi-Orque`) à la liste `RACES_DND5` du menu Espèce, afin que les personnages créés via l'assistant (et via la création rapide) affichent correctement leur espèce dans la fiche.
 - **`backend/src/routes/players.js`** — extraction de la liste des champs autorisés dans une constante `PLAYER_FIELDS` (déduplication entre `buildPlayerFields` et `buildPlayerUpdates`, même approche que `ENEMY_FIELDS` dans `enemies.js`). Refacto pur, aucun changement de comportement.
 
 ### Supprimé

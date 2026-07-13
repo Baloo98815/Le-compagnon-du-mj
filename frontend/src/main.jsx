@@ -21,6 +21,7 @@ import SceneDetailPage from './pages/SceneDetailPage'
 import NPCsPage from './pages/NPCsPage'
 import DMScreenPage from './pages/DMScreenPage'
 import AdminPage from './pages/AdminPage'
+import CharacterCreatorPage from './pages/CharacterCreatorPage'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -50,6 +51,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/campaigns" element={<ProtectedRoute><CampaignsPage /></ProtectedRoute>} />
           <Route path="/campaigns/:id" element={<ProtectedRoute><CampaignDetailPage /></ProtectedRoute>} />
           <Route path="/players" element={<ProtectedRoute><PlayersPage /></ProtectedRoute>} />
+          <Route path="/players/creer" element={<ProtectedRoute><CharacterCreatorPage /></ProtectedRoute>} />
           <Route path="/players/:id" element={<ProtectedRoute><PlayerDetailPage /></ProtectedRoute>} />
           <Route path="/enemies" element={<ProtectedRoute><EnemiesPage /></ProtectedRoute>} />
           <Route path="/enemies/:id" element={<ProtectedRoute><EnemyDetailPage /></ProtectedRoute>} />
